@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verisure · Planning OPS 24×7 · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS — Light-first, Verisure brand
+══════════════════════════════════════════════ */
+:root {
+  --red:      #ED002F;
+  --red-lt:   #fff0f2;
+  --bg:       #F0F2F5;
+  --card:     #FFFFFF;
+  --border:   #E2E5EA;
+  --border2:  #CDD1D8;
+  --text:     #1A1D23;
+  --text2:    #4B5563;
+  --muted:    #9CA3AF;
+  --we-bg:    #EFF6FF;
+  --we-hd:    #DBEAFE;
+  --today-bg: #FEF3C7;
+  --today-hd: #FDE68A;
+  --hover-row:#F8F9FB;
+  --tl-bg:    #FFF5F5;
+  --tl-bd:    #FECDD3;
+  --coord-bg: #FAF5FF;
+  --coord-bd: #E9D5FF;
+
+  /* Shift pill colours — pastel fill, saturated text */
+  --M-bg:#DBEAFE; --M-tx:#1D4ED8;
+  --T-bg:#FEF3C7; --T-tx:#92400E;
+  --N-bg:#EDE9FE; --N-tx:#5B21B6;
+  --R-bg:#CFFAFE; --R-tx:#0E7490;
+  --FM-bg:#DCFCE7; --FM-tx:#15803D;
+  --FN-bg:#C7D2FE; --FN-tx:#3730A3;
+  --GC-bg:#FFEDD5; --GC-tx:#C2410C;
+  --V-bg:#D1FAE5;  --V-tx:#065F46;
+  --O-bg:#F3F4F6;  --O-tx:#6B7280;
+  --W-bg:#1E3A5F;  --W-tx:#FFFFFF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.topbar-left { display:flex; align-items:center; gap:16px; }
+
+/* Logo */
+.logo-pill {
+  display:flex; align-items:center; gap:8px;
+  background: var(--red);
+  border-radius: 8px;
+  padding: 5px 12px 5px 8px;
+  text-decoration: none;
+}
+.logo-icon { width:26px; height:26px; flex-shrink:0; }
+.logo-word { height:15px; }
+
+.topbar-title { font-size:14px; font-weight:700; color:var(--text); }
+.topbar-sub   { font-size:11px; color:var(--muted); margin-top:1px; }
+.topbar-div   { width:1px; height:28px; background:var(--border); }
+.topbar-right { display:flex; align-items:center; gap:8px; }
+
+/* ── FILTER BAR ── */
+.filterbar {
+  background:#fff;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filter-group { display:flex; align-items:center; gap:6px; }
+.filter-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
+
+.search-box {
+  display:flex; align-items:center; gap:6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: inherit;
+}
+.search-box input {
+  border:none; background:transparent; font-family:inherit;
+  font-size:12px; color:var(--text); outline:none; width:160px;
+}
+.search-box input::placeholder { color:var(--muted); }
+
+.chip-group { display:flex; gap:4px; flex-wrap:wrap; }
+.chip {
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  font-size:11px; font-weight:600;
+  cursor:pointer; transition:.12s;
+  white-space:nowrap;
+  color: var(--text2);
+}
+.chip:hover { border-color: var(--red); color: var(--red); }
+.chip.active { background: var(--red); border-color: var(--red); color:#fff; }
+
+/* Shift filter chips use shift colours */
+.chip-shift { font-size:11px; font-weight:700; letter-spacing:.02em; }
+.chip-shift.active-M  { background:var(--M-bg); border-color:var(--M-tx); color:var(--M-tx); }
+.chip-shift.active-T  { background:var(--T-bg); border-color:var(--T-tx); color:var(--T-tx); }
+.chip-shift.active-N  { background:var(--N-bg); border-color:var(--N-tx); color:var(--N-tx); }
+.chip-shift.active-R  { background:var(--R-bg); border-color:var(--R-tx); color:var(--R-tx); }
+.chip-shift.active-FM { background:var(--FM-bg); border-color:var(--FM-tx); color:var(--FM-tx); }
+.chip-shift.active-FN { background:var(--FN-bg); border-color:var(--FN-tx); color:var(--FN-tx); }
+.chip-shift.active-GC { background:var(--GC-bg); border-color:var(--GC-tx); color:var(--GC-tx); }
+.chip-shift.active-V  { background:var(--V-bg); border-color:var(--V-tx); color:var(--V-tx); }
+.chip-shift.active-O  { background:var(--O-bg); border-color:var(--O-tx); color:var(--O-tx); }
+
+.filter-sep { width:1px; height:24px; background:var(--border); flex-shrink:0; }
+
+/* ── MONTH NAV ── */
+.month-nav {
+  display:flex; align-items:center;
+  background: var(--bg); border:1px solid var(--border); border-radius:6px; overflow:hidden;
+}
+.month-nav button {
+  background:none; border:none; color:var(--text2); cursor:pointer;
+  padding:5px 10px; font-size:14px; transition:.12s; line-height:1;
+  font-family:inherit;
+}
+.month-nav button:hover { background:var(--border); }
+.month-label {
+  font-size:12px; font-weight:700; padding:5px 14px;
+  min-width:130px; text-align:center;
+  border-left:1px solid var(--border); border-right:1px solid var(--border);
+  color:var(--text); letter-spacing:.04em; text-transform:uppercase;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  padding:6px 14px; border-radius:6px; border:1px solid var(--border);
+  background:#fff; color:var(--text2); font-family:inherit; font-size:12px;
+  font-weight:500; cursor:pointer; transition:.12s; white-space:nowrap;
+}
+.btn:hover { border-color:var(--red); color:var(--red); }
+.btn.btn-red { background:var(--red); border-color:var(--red); color:#fff; }
+.btn.btn-red:hover { background:#C50028; }
+.btn-editor { color:var(--red); border-color:rgba(237,0,47,.3); }
+.btn-editor.on { background:var(--red-lt); }
+.btn-icon { padding:6px 9px; }
+
+/* ── EDIT BANNER ── */
+.edit-banner {
+  display:none; background:#FFF5F5; border-bottom:1px solid #FECDD3;
+  padding:6px 24px; font-size:11px; color:var(--red);
+  align-items:center; gap:8px;
+}
+.edit-banner.show { display:flex; }
+.edit-dot { width:6px; height:6px; border-radius:50%; background:var(--red); animation:pulse 1.5s infinite; }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── MAIN ── */
+main { padding:16px 24px; }
+
+/* STATS STRIP */
+.stats-strip {
+  display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;
+}
+.stat-pill {
+  display:flex; align-items:center; gap:6px;
+  background:#fff; border:1px solid var(--border); border-radius:20px;
+  padding:4px 12px; font-size:12px;
+}
+.stat-dot { width:8px; height:8px; border-radius:50%; }
+.stat-val { font-weight:700; color:var(--text); }
+.stat-lbl { color:var(--muted); }
+
+/* ── TABLE CARD ── */
+.table-card {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:10px;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.table-scroll { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; min-width:max-content; }
+
+/* Section dividers */
+.section-row td {
+  background:#F8F9FB;
+  border-top:2px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:5px 12px;
+  font-size:10px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted);
+}
+.section-tl td { background:var(--tl-bg); border-top:none; border-bottom:1px solid var(--tl-bd); color:#BE123C; }
+.section-coord td { background:var(--coord-bg); border-bottom:1px solid var(--coord-bd); color:#7C3AED; }
+
+/* Header row */
+thead th {
+  background:#fff;
+  border-bottom:2px solid var(--border);
+  font-size:10px; font-weight:600; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em;
+  padding:8px 4px 6px;
+  text-align:center;
+  white-space:nowrap;
+}
+.th-name {
+  text-align:left; padding:8px 14px; min-width:170px;
+  position:sticky; left:0; background:#fff; z-index:10;
+  border-right:1px solid var(--border);
+  box-shadow:2px 0 4px rgba(0,0,0,.04);
+}
+.th-total {
+  min-width:52px; background:#fff;
+  position:sticky; right:0;
+  border-left:1px solid var(--border);
+  box-shadow:-2px 0 4px rgba(0,0,0,.04);
+  color:var(--text2);
+}
+.th-day { min-width:32px; }
+.th-day.we  { background:var(--we-hd); }
+.th-day.tod { background:var(--today-hd); }
+.day-num { display:block; font-size:12px; font-weight:700; color:var(--text); margin-bottom:1px; }
+.day-wd  { display:block; font-size:9px; color:var(--muted); }
+.today-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--red); color:#fff; border-radius:4px;
+  width:20px; height:20px; font-size:11px; font-weight:700;
+}
+
+/* Data rows */
+tbody tr { border-bottom:1px solid var(--border); transition:background .1s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:not(.section-row):not(.section-tl):not(.section-coord):hover { background:var(--hover-row); }
+tbody tr:not(.section-row):not(.section-tl):not(.section-coord):hover .td-name { background:var(--hover-row); }
+
+/* TL row */
+.tl-row { background:var(--tl-bg) !important; }
+.tl-row .td-name { background:var(--tl-bg) !important; border-left:3px solid var(--red); }
+.tl-row:hover { background:#FFE4E8 !important; }
+.tl-row:hover .td-name { background:#FFE4E8 !important; }
+
+/* Name column */
+.td-name {
+  position:sticky; left:0; background:#fff; z-index:5;
+  padding:6px 14px; border-right:1px solid var(--border);
+  white-space:nowrap;
+  box-shadow:2px 0 4px rgba(0,0,0,.04);
+}
+.worker-wrap { display:flex; align-items:center; gap:6px; }
+.tl-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--red); color:#fff;
+  font-size:9px; font-weight:700; border-radius:3px;
+  padding:1px 5px; letter-spacing:.05em; flex-shrink:0;
+}
+.worker-name { font-size:12px; font-weight:500; }
+.worker-tl    { color:#BE123C; font-weight:700; }
+.worker-coord { color:#7C3AED; font-weight:600; }
+.worker-op    { color:var(--text); }
+
+/* Shift cells */
+.td-shift { padding:2px 2px; text-align:center; vertical-align:middle; }
+.td-shift.we  { background:var(--we-bg); }
+.td-shift.tod { background:var(--today-bg); }
+
+/* Shift badges — pastel pills */
+.sb {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:22px; border-radius:5px;
+  font-size:10px; font-weight:700; cursor:default; transition:.1s;
+  letter-spacing:0;
+}
+.sb-M  { background:var(--M-bg);  color:var(--M-tx);  }
+.sb-T  { background:var(--T-bg);  color:var(--T-tx);  }
+.sb-N  { background:var(--N-bg);  color:var(--N-tx);  }
+.sb-R  { background:var(--R-bg);  color:var(--R-tx);  }
+.sb-FM { background:var(--FM-bg); color:var(--FM-tx); font-size:8.5px; }
+.sb-FN { background:var(--FN-bg); color:var(--FN-tx); font-size:8.5px; }
+.sb-GC { background:var(--GC-bg); color:var(--GC-tx); font-size:8.5px; }
+.sb-V  { background:var(--V-bg);  color:var(--V-tx);  }
+.sb-O  { background:var(--O-bg);  color:var(--O-tx);  }
+
+/* Total column */
+.td-total {
+  position:sticky; right:0; background:#fff;
+  padding:6px 8px; text-align:center;
+  border-left:1px solid var(--border);
+  box-shadow:-2px 0 4px rgba(0,0,0,.04);
+  font-size:11px; font-weight:700; color:var(--text2);
+  white-space:nowrap;
+}
+.tl-row .td-total { background:var(--tl-bg) !important; }
+
+/* FILTER HIGHLIGHT: dim non-matching cells */
+body.filter-shift .sb { opacity:.15; }
+body.filter-shift .sb.highlight { opacity:1; transform:scale(1.1); }
+
+/* SEARCH HIGHLIGHT */
+tr.row-hidden { display:none; }
+
+/* EDIT MODE */
+body.edit-mode .td-shift { cursor:pointer; }
+body.edit-mode .td-shift:hover { background:rgba(237,0,47,.08) !important; }
+body.edit-mode .td-shift:hover .sb { transform:scale(1.15); }
+
+/* ── PICKER ── */
+.picker {
+  position:fixed; background:#fff;
+  border:1px solid var(--border); border-top:2px solid var(--red);
+  border-radius:8px; padding:10px; z-index:500;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+  display:none; flex-wrap:wrap; gap:5px; width:228px;
+}
+.picker.show { display:flex; }
+.picker-label { width:100%; font-size:9px; font-weight:700; color:var(--red); letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+.pk {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:42px; height:32px; border-radius:6px; font-size:11px; font-weight:700;
+  cursor:pointer; transition:.1s; border:2px solid transparent;
+}
+.pk:hover { border-color:rgba(0,0,0,.3); transform:scale(1.06); }
+.pk.sel { border-color:rgba(0,0,0,.5); box-shadow:0 0 0 1px rgba(0,0,0,.2) inset; }
+.pk-clear {
+  width:100%; background:#FFF5F5; border:1px solid #FECDD3; color:var(--red);
+  border-radius:6px; padding:6px; font-family:inherit; font-size:11px; font-weight:600;
+  cursor:pointer; transition:.12s; margin-top:3px;
+}
+.pk-clear:hover { background:#FFE4E8; }
+
+/* ── MODALS ── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:900;
+  display:none; align-items:center; justify-content:center;
+}
+.modal-overlay.show { display:flex; }
+.modal {
+  background:#fff; border:1px solid var(--border); border-top:3px solid var(--red);
+  border-radius:10px; padding:28px 24px; width:300px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+.modal h3 { font-size:15px; font-weight:700; margin-bottom:5px; }
+.modal p  { font-size:12px; color:var(--text2); margin-bottom:18px; line-height:1.5; }
+.pin-dots { display:flex; justify-content:center; gap:10px; margin-bottom:18px; }
+.pd { width:13px; height:13px; border-radius:50%; background:var(--border); transition:.2s; }
+.pd.on { background:var(--red); }
+.pin-keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+.pk-key {
+  background:#fff; border:1px solid var(--border); color:var(--text);
+  border-radius:8px; padding:13px; font-family:inherit; font-size:16px; font-weight:700;
+  cursor:pointer; transition:.12s;
+}
+.pk-key:hover { background:var(--bg); border-color:var(--red); }
+.pk-key.del { font-size:12px; color:var(--muted); }
+.pin-err { color:var(--red); font-size:11px; margin-top:10px; min-height:16px; }
+
+.exp-modal {
+  background:#fff; border:1px solid var(--border); border-top:3px solid var(--red);
+  border-radius:10px; padding:22px; width:420px; max-width:95vw;
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+.exp-modal h3 { font-size:14px; font-weight:700; margin-bottom:5px; }
+.exp-modal p  { font-size:12px; color:var(--text2); margin-bottom:14px; line-height:1.5; }
+.exp-actions  { display:flex; gap:7px; flex-wrap:wrap; }
+
+/* EDITOR TOOLBAR */
+.editor-toolbar {
+  display:none; margin-top:12px; gap:8px; flex-wrap:wrap; align-items:center;
+  padding:10px 14px; background:#fff; border:1px solid var(--border);
+  border-left:3px solid var(--red); border-radius:8px;
+}
+.editor-toolbar.show { display:flex; }
+.editor-toolbar-label { font-size:10px; font-weight:700; color:var(--red); letter-spacing:.08em; text-transform:uppercase; margin-right:4px; }
+
+/* CHANGELOG */
+.changelog { margin-top:8px; background:#fff; border:1px solid var(--border); border-radius:8px; overflow:hidden; display:none; }
+.changelog.show { display:block; }
+.cl-header { padding:8px 14px; font-size:10px; font-weight:700; color:var(--muted); letter-spacing:.08em; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; text-transform:uppercase; }
+.cl-list { max-height:150px; overflow-y:auto; }
+.cl-item { padding:6px 14px; font-size:11px; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; }
+.cl-item:last-child { border-bottom:none; }
+.cl-time { color:var(--muted); font-size:10px; }
+.cl-who  { color:var(--red); font-weight:600; }
+
+/* ── LEGEND ── */
+.legend-card {
+  margin-top:12px; background:#fff; border:1px solid var(--border);
+  border-radius:10px; padding:14px 18px;
+}
+.legend-title { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; }
+.legend-grid { display:flex; flex-wrap:wrap; gap:8px; }
+.li { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text2); }
+.lb {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:20px; border-radius:4px; font-size:9px; font-weight:700;
+}
+
+/* ── NO RESULTS ── */
+.no-results { text-align:center; padding:32px; color:var(--muted); font-size:13px; }
+
+/* ── ACTIVE FILTER INDICATOR ── */
+.filter-active-badge {
+  display:none; background:var(--red); color:#fff;
+  font-size:10px; font-weight:700; border-radius:10px;
+  padding:1px 7px; margin-left:4px;
+}
+.filter-active-badge.show { display:inline; }
+
+/* ── VACATION COLUMNS ── */
+.th-vac {
+  min-width: 64px; font-size:9px; font-weight:700; letter-spacing:.05em;
+  text-transform:uppercase; padding:6px 4px;
+  position:sticky; background:#fff;
+  border-left:1px solid var(--border);
+  box-shadow:-2px 0 4px rgba(0,0,0,.04);
+}
+.th-vac-used { right:64px; color:#0E7490; }
+.th-vac-pend { right:0;   color:#15803D; }
+
+.td-vac {
+  text-align:center; font-size:11px; font-weight:700;
+  padding:5px 4px; white-space:nowrap;
+  position:sticky; background:#fff;
+  border-left:1px solid var(--border);
+  box-shadow:-2px 0 4px rgba(0,0,0,.04);
+}
+.td-vac-used { right:64px; color:#0E7490; }
+.td-vac-pend { right:0; }
+.vac-pend-pos { color:#15803D; }
+.vac-pend-neg { color:#DC2626; }
+.vac-pend-zero { color:var(--muted); }
+.vac-of { font-weight:400; color:var(--muted); font-size:10px; }
+
+/* TL row sticky cells */
+.tl-row .td-vac { background:var(--tl-bg) !important; }
+.tl-row:hover .td-vac { background:#FFE4E8 !important; }
+
+/* Also shift th-total right position now that vac cols push it */
+.th-total { right:128px !important; }
+.td-total { right:128px !important; }
+
+.vac-used-full { color:#DC2626 !important; }
+.vac-used-hi   { color:#EA580C !important; }
+.vac-used-mid  { color:#0E7490 !important; }
+.vac-used-lo   { color:#15803D !important; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="edit-banner" id="editBanner">
+  <span class="edit-dot"></span>
+  <span id="editorName">Modo editor activo</span>
+  — Haz clic en cualquier celda para modificar el turno
+</div>
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-pill">
+      <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path fill="white" d="M50 8 C58 8,70 14,74 22 C80 22,90 28,90 38 C90 48,84 56,76 60 C76 68,70 80,60 84 C54 88,46 88,40 84 C30 80,24 68,24 60 C16 56,10 48,10 38 C10 28,20 22,26 22 C30 14,42 8,50 8Z"/>
+        <circle cx="50" cy="48" r="20" fill="none" stroke="#ED002F" stroke-width="4"/>
+      </svg>
+      <svg class="logo-word" viewBox="0 0 200 36" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="28" font-family="Plus Jakarta Sans,sans-serif" font-size="30" font-weight="700" fill="white" letter-spacing="-0.5">verisure</text>
+      </svg>
+    </div>
+    <div class="topbar-div"></div>
+    <div>
+      <div class="topbar-title">Planning Operaciones 24×7</div>
+      <div class="topbar-sub">San Vicente del Raspeig · 2026</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn" onclick="goToday()">Hoy</button>
+    <div class="month-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <span class="month-label" id="monthLabel"></span>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+    <button class="btn btn-editor" id="editBtn" onclick="toggleEdit()">✏ Editor</button>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filterbar">
+  <!-- Search -->
+  <div class="filter-group">
+    <span class="filter-label">Buscar</span>
+    <div class="search-box">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#9CA3AF" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Nombre del trabajador…" oninput="applyFilters()">
+    </div>
+  </div>
+  <div class="filter-sep"></div>
+  <!-- Role filter -->
+  <div class="filter-group">
+    <span class="filter-label">Rol</span>
+    <div class="chip-group">
+      <button class="chip active" data-role="all" onclick="setRole(this,'all')">Todos</button>
+      <button class="chip" data-role="tl" onclick="setRole(this,'tl')">Team Leader</button>
+      <button class="chip" data-role="coord" onclick="setRole(this,'coord')">Coordinación</button>
+      <button class="chip" data-role="ops" onclick="setRole(this,'ops')">Operadores</button>
+    </div>
+  </div>
+  <div class="filter-sep"></div>
+  <!-- Shift type filter -->
+  <div class="filter-group">
+    <span class="filter-label">Turno <span class="filter-active-badge" id="shiftBadge">1</span></span>
+    <div class="chip-group" id="shiftChips">
+      <button class="chip chip-shift" data-shift="M"  onclick="toggleShift(this,'M')">M</button>
+      <button class="chip chip-shift" data-shift="T"  onclick="toggleShift(this,'T')">T</button>
+      <button class="chip chip-shift" data-shift="N"  onclick="toggleShift(this,'N')">N</button>
+      <button class="chip chip-shift" data-shift="R"  onclick="toggleShift(this,'R')">R</button>
+      <button class="chip chip-shift" data-shift="FM" onclick="toggleShift(this,'FM')">FM</button>
+      <button class="chip chip-shift" data-shift="FN" onclick="toggleShift(this,'FN')">FN</button>
+      <button class="chip chip-shift" data-shift="GC" onclick="toggleShift(this,'GC')">GC</button>
+      <button class="chip chip-shift" data-shift="V"  onclick="toggleShift(this,'V')">V</button>
+      <button class="chip chip-shift" data-shift="O"  onclick="toggleShift(this,'O')">O</button>
+    </div>
+  </div>
+  <div class="filter-sep"></div>
+  <button class="btn" onclick="toggleVacPanel()" id="vacBtn" style="font-size:11px;">📅 Vacaciones</button>
+  <button class="btn" onclick="clearFilters()" style="font-size:11px;">✕ Limpiar</button>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="stats-strip" id="statsBar"></div>
+  <div id="vacPanel" style="display:none;margin-bottom:12px;">
+    <div class="table-card" style="padding:14px 18px;">
+      <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">
+        Resumen de Vacaciones 2026 — días usados / asignados
+      </div>
+      <div id="vacGrid" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr id="tHead"></tr></thead>
+        <tbody id="tBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EDITOR TOOLBAR -->
+  <div class="editor-toolbar" id="editorToolbar">
+    <span class="editor-toolbar-label">Editor</span>
+    <button class="btn" onclick="exportData()" style="color:#15803D;border-color:rgba(21,128,61,.4)">⬇ Exportar JSON</button>
+    <button class="btn btn-editor" onclick="showImport()">⬆ Importar JSON</button>
+    <button class="btn" onclick="toggleChangelog()">📋 Historial</button>
+    <button class="btn" onclick="logout()" style="color:#DC2626;border-color:rgba(220,38,38,.3)">Salir</button>
+  </div>
+  <div class="changelog" id="changelogEl">
+    <div class="cl-header">
+      <span>Historial de cambios — sesión actual</span>
+      <button class="btn" style="padding:2px 8px;font-size:10px;" onclick="clearLog()">Limpiar</button>
+    </div>
+    <div class="cl-list" id="clList"></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend-card">
+    <div class="legend-title">Leyenda de turnos</div>
+    <div class="legend-grid">
+      <div class="li"><span class="lb" style="background:var(--M-bg);color:var(--M-tx)">M</span> Mañana 07–16h</div>
+      <div class="li"><span class="lb" style="background:var(--T-bg);color:var(--T-tx)">T</span> Tarde 15–00h</div>
+      <div class="li"><span class="lb" style="background:var(--N-bg);color:var(--N-tx)">N</span> Noche 23–08h</div>
+      <div class="li"><span class="lb" style="background:var(--R-bg);color:var(--R-tx)">R</span> Refuerzo 09:30–18:30h</div>
+      <div class="li"><span class="lb" style="background:var(--FM-bg);color:var(--FM-tx);font-size:8px">FM</span> Finde Día 08–20h</div>
+      <div class="li"><span class="lb" style="background:var(--FN-bg);color:var(--FN-tx);font-size:8px">FN</span> Finde Noche 20–08h</div>
+      <div class="li"><span class="lb" style="background:var(--GC-bg);color:var(--GC-tx);font-size:8px">GC</span> Guardia Coord</div>
+      <div class="li"><span class="lb" style="background:var(--V-bg);color:var(--V-tx)">V</span> Vacaciones</div>
+      <div class="li"><span class="lb" style="background:var(--O-bg);color:var(--O-tx)">O</span> Oficina 09–18h</div>
+    </div>
+  </div>
+</main>
+
+<!-- PICKER -->
+<div class="picker" id="picker"></div>
+
+<!-- PIN MODAL -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <h3>Acceso Editor</h3>
+    <p>Introduce tu PIN de 4 dígitos<br>para activar el modo edición.</p>
+    <div class="pin-dots" id="pinDots">
+      <div class="pd" id="pd0"></div><div class="pd" id="pd1"></div>
+      <div class="pd" id="pd2"></div><div class="pd" id="pd3"></div>
+    </div>
+    <div class="pin-keypad">
+      <button class="pk-key" onclick="pk('1')">1</button><button class="pk-key" onclick="pk('2')">2</button><button class="pk-key" onclick="pk('3')">3</button>
+      <button class="pk-key" onclick="pk('4')">4</button><button class="pk-key" onclick="pk('5')">5</button><button class="pk-key" onclick="pk('6')">6</button>
+      <button class="pk-key" onclick="pk('7')">7</button><button class="pk-key" onclick="pk('8')">8</button><button class="pk-key" onclick="pk('9')">9</button>
+      <button class="pk-key del" onclick="pk('C')">✕</button><button class="pk-key" onclick="pk('0')">0</button><button class="pk-key del" onclick="pk('D')">⌫</button>
+    </div>
+    <div class="pin-err" id="pinErr"></div>
+    <button class="btn" style="margin-top:14px;width:100%;" onclick="closePin()">Cancelar</button>
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="expModal">
+  <div class="exp-modal">
+    <h3 id="expTitle"></h3>
+    <p id="expDesc"></p>
+    <textarea id="expArea" style="width:100%;height:110px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:monospace;font-size:10px;padding:8px;resize:vertical;margin-bottom:12px;"></textarea>
+    <div class="exp-actions" id="expActions"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const BASE=[{"name":"Franco Matias Sanchez","dept":"Operaciones","shifts":{"2026-02-02":"O","2026-02-03":"O","2026-02-04":"O","2026-02-05":"O","2026-02-06":"O","2026-02-09":"O","2026-02-10":"O","2026-02-11":"O","2026-02-12":"O","2026-02-13":"O","2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"V","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"V","2026-03-31":"V","2026-04-01":"V","2026-04-02":"V","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-09":"FM","2026-05-10":"FM","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"N","2026-05-19":"N","2026-05-20":"N","2026-05-21":"N","2026-05-22":"N","2026-05-25":"T","2026-05-30":"FN","2026-05-31":"FN","2026-06-02":"T","2026-06-03":"T","2026-06-04":"T","2026-06-05":"T","2026-06-08":"V","2026-06-09":"V","2026-06-10":"V","2026-06-11":"V","2026-06-12":"V","2026-06-15":"T","2026-06-20":"FN","2026-06-21":"FN","2026-06-25":"T","2026-06-26":"T","2026-06-29":"N","2026-06-30":"N","2026-07-01":"N","2026-07-02":"N","2026-07-03":"N","2026-07-06":"M","2026-07-11":"FM","2026-07-12":"FM","2026-07-14":"R","2026-07-15":"R","2026-07-16":"R","2026-07-17":"R","2026-07-20":"M","2026-07-21":"M","2026-07-22":"M","2026-07-23":"M","2026-07-24":"M","2026-07-27":"T","2026-08-01":"FN","2026-08-02":"FN","2026-08-04":"T","2026-08-05":"T","2026-08-06":"T","2026-08-07":"T","2026-08-10":"N","2026-08-11":"N","2026-08-12":"N","2026-08-13":"N","2026-08-14":"N","2026-08-17":"N","2026-08-22":"FM","2026-08-23":"FM","2026-08-25":"N","2026-08-26":"N","2026-08-27":"N","2026-08-28":"N","2026-09-07":"V","2026-09-08":"V","2026-09-09":"V","2026-09-10":"V","2026-09-11":"V","2026-09-14":"V","2026-09-15":"V","2026-09-16":"V","2026-09-17":"V","2026-09-18":"V"}},{"name":"Younes Jarir Ezzahraoui","dept":"Operaciones","shifts":{"2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-20":"V","2026-03-23":"V","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-14":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"N","2026-05-05":"N","2026-05-06":"N","2026-05-07":"N","2026-05-08":"N","2026-05-11":"M","2026-05-16":"FM","2026-05-17":"FM","2026-05-19":"T","2026-05-20":"T","2026-05-21":"T","2026-05-22":"T","2026-05-25":"M","2026-05-30":"FM","2026-05-31":"FM","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"V","2026-06-09":"V","2026-06-10":"V","2026-06-11":"V","2026-06-12":"M","2026-06-15":"N","2026-06-16":"N","2026-06-17":"N","2026-06-18":"N","2026-06-19":"N","2026-06-22":"V","2026-06-25":"V","2026-06-26":"V","2026-06-29":"M","2026-07-04":"FM","2026-07-05":"FM","2026-07-07":"M","2026-07-08":"M","2026-07-09":"M","2026-07-10":"M","2026-07-13":"M","2026-07-14":"M","2026-07-15":"M","2026-07-16":"M","2026-07-17":"M","2026-07-20":"T","2026-07-25":"FN","2026-07-26":"FN","2026-07-28":"T","2026-07-29":"T","2026-07-30":"T","2026-07-31":"T","2026-08-03":"N","2026-08-04":"N","2026-08-05":"N","2026-08-06":"N","2026-08-07":"N","2026-08-10":"T","2026-08-15":"FM","2026-08-16":"FM","2026-08-18":"N","2026-08-19":"N","2026-08-20":"N","2026-08-21":"N","2026-08-24":"V","2026-08-25":"V","2026-08-26":"V","2026-08-27":"V","2026-08-28":"V","2026-10-26":"V","2026-10-27":"V","2026-10-28":"V","2026-10-29":"V","2026-10-30":"V"}},{"name":"David Aibar","dept":"Operaciones","shifts":{"2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"V","2026-04-08":"V","2026-04-09":"V","2026-04-10":"V","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"T","2026-05-09":"FN","2026-05-10":"FN","2026-05-12":"N","2026-05-13":"N","2026-05-14":"N","2026-05-15":"N","2026-05-18":"M","2026-05-23":"FM","2026-05-24":"FM","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"N","2026-06-02":"N","2026-06-03":"N","2026-06-04":"N","2026-06-05":"N","2026-06-08":"T","2026-06-13":"FN","2026-06-14":"FN","2026-06-16":"T","2026-06-17":"T","2026-06-18":"T","2026-06-19":"T","2026-06-22":"M","2026-06-27":"FM","2026-06-28":"FM","2026-06-30":"R","2026-07-01":"R","2026-07-02":"R","2026-07-03":"R","2026-07-06":"V","2026-07-07":"V","2026-07-08":"V","2026-07-09":"V","2026-07-10":"V","2026-07-13":"T","2026-07-18":"FN","2026-07-19":"FN","2026-07-21":"T","2026-07-22":"T","2026-07-23":"T","2026-07-24":"T","2026-07-27":"M","2026-08-01":"FM","2026-08-02":"FM","2026-08-04":"M","2026-08-05":"M","2026-08-06":"M","2026-08-07":"M","2026-08-10":"M","2026-08-11":"M","2026-08-12":"M","2026-08-13":"M","2026-08-14":"M","2026-08-17":"T","2026-08-22":"FN","2026-08-23":"FN","2026-08-25":"T","2026-08-26":"T","2026-08-27":"T","2026-08-28":"T","2026-09-14":"V","2026-09-15":"V","2026-09-16":"V","2026-09-17":"V","2026-09-18":"V","2026-11-23":"V","2026-11-24":"V","2026-11-25":"V","2026-11-26":"V","2026-11-27":"V"}},{"name":"Juan Patricio Sigwald Ciurca","dept":"Operaciones","shifts":{"2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"T","2026-05-05":"T","2026-05-06":"T","2026-05-07":"T","2026-05-08":"T","2026-05-11":"T","2026-05-16":"FN","2026-05-17":"FN","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"N","2026-05-26":"N","2026-05-27":"N","2026-05-28":"N","2026-05-29":"N","2026-06-01":"T","2026-06-06":"FN","2026-06-07":"FN","2026-06-09":"T","2026-06-10":"T","2026-06-11":"T","2026-06-12":"V","2026-06-15":"M","2026-06-20":"FM","2026-06-21":"FM","2026-06-25":"M","2026-06-26":"M","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M","2026-07-06":"T","2026-07-11":"FN","2026-07-12":"FN","2026-07-14":"T","2026-07-15":"T","2026-07-16":"T","2026-07-17":"T","2026-07-20":"N","2026-07-21":"N","2026-07-22":"N","2026-07-23":"N","2026-07-24":"N","2026-07-27":"R","2026-07-28":"V","2026-07-29":"V","2026-07-30":"V","2026-07-31":"V","2026-08-03":"M","2026-08-08":"FM","2026-08-09":"FM","2026-08-11":"R","2026-08-12":"R","2026-08-13":"R","2026-08-14":"R","2026-08-17":"M","2026-08-18":"M","2026-08-19":"M","2026-08-20":"M","2026-08-21":"M","2026-08-24":"V","2026-08-25":"V","2026-08-26":"V","2026-08-27":"V","2026-08-28":"V","2026-09-07":"V","2026-09-08":"V","2026-09-09":"V","2026-09-10":"V","2026-09-11":"V","2026-12-28":"V","2026-12-29":"V","2026-12-30":"V","2026-12-31":"V"}},{"name":"Santiago Motilla","dept":"Operaciones","shifts":{"2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"T","2026-05-05":"T","2026-05-06":"T","2026-05-07":"T","2026-05-08":"T","2026-05-11":"N","2026-05-12":"N","2026-05-13":"N","2026-05-14":"N","2026-05-15":"N","2026-05-18":"T","2026-05-23":"FN","2026-05-24":"FN","2026-05-26":"T","2026-05-27":"T","2026-05-28":"T","2026-05-29":"T","2026-06-01":"M","2026-06-06":"FM","2026-06-07":"FM","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"T","2026-06-15":"V","2026-06-16":"V","2026-06-17":"V","2026-06-18":"V","2026-06-19":"V","2026-06-22":"T","2026-06-27":"FN","2026-06-28":"FN","2026-06-30":"T","2026-07-01":"T","2026-07-02":"T","2026-07-03":"T","2026-07-06":"N","2026-07-07":"N","2026-07-08":"N","2026-07-09":"N","2026-07-10":"N","2026-07-13":"M","2026-07-18":"FM","2026-07-19":"FM","2026-07-21":"R","2026-07-22":"R","2026-07-23":"R","2026-07-24":"R","2026-07-27":"N","2026-07-28":"N","2026-07-29":"N","2026-07-30":"N","2026-07-31":"N","2026-08-03":"T","2026-08-08":"FN","2026-08-09":"FN","2026-08-11":"T","2026-08-12":"T","2026-08-13":"T","2026-08-14":"T","2026-08-17":"V","2026-08-18":"V","2026-08-19":"V","2026-08-20":"V","2026-08-21":"V","2026-08-24":"M","2026-08-29":"FM","2026-08-30":"FM","2026-10-05":"V","2026-10-06":"V","2026-10-07":"V","2026-10-08":"V","2026-12-28":"V","2026-12-29":"V","2026-12-30":"V","2026-12-31":"V"}},{"name":"Fernando Mata Heras","dept":"Operaciones","shifts":{"2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"V","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"V","2026-03-31":"V","2026-04-01":"V","2026-04-02":"V","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"V","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"T","2026-05-12":"T","2026-05-13":"T","2026-05-14":"T","2026-05-15":"T","2026-05-18":"N","2026-05-19":"N","2026-05-20":"N","2026-05-21":"N","2026-05-22":"N","2026-05-25":"N","2026-05-30":"FN","2026-05-31":"FN","2026-06-02":"T","2026-06-03":"T","2026-06-04":"T","2026-06-05":"T","2026-06-08":"M","2026-06-13":"FM","2026-06-14":"FM","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"V","2026-06-25":"V","2026-06-26":"V","2026-06-29":"T","2026-07-04":"FN","2026-07-05":"FN","2026-07-07":"T","2026-07-08":"T","2026-07-09":"T","2026-07-10":"T","2026-07-13":"N","2026-07-14":"N","2026-07-15":"N","2026-07-16":"N","2026-07-17":"N","2026-07-20":"R","2026-07-25":"FM","2026-07-26":"FM","2026-07-28":"M","2026-07-29":"M","2026-07-30":"M","2026-07-31":"M","2026-08-03":"T","2026-08-04":"T","2026-08-05":"T","2026-08-06":"T","2026-08-07":"T","2026-08-10":"R","2026-08-15":"FN","2026-08-16":"FN","2026-08-18":"T","2026-08-19":"T","2026-08-20":"T","2026-08-21":"T","2026-08-24":"N","2026-08-29":"FN","2026-08-30":"FN","2026-10-05":"V","2026-10-06":"V","2026-10-07":"V","2026-10-08":"V"}},{"name":"Iván Cano del Molino","dept":"Operaciones","shifts":{"2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"N","2026-05-05":"N","2026-05-06":"N","2026-05-07":"N","2026-05-08":"N","2026-05-11":"M","2026-05-16":"FM","2026-05-17":"FM","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"T","2026-05-26":"T","2026-05-27":"T","2026-05-28":"T","2026-05-29":"T","2026-06-01":"T","2026-06-06":"FN","2026-06-07":"FN","2026-06-09":"T","2026-06-10":"T","2026-06-11":"T","2026-06-12":"T","2026-06-15":"V","2026-06-16":"V","2026-06-17":"V","2026-06-18":"V","2026-06-19":"V","2026-06-22":"M","2026-06-27":"FM","2026-06-28":"FM","2026-06-30":"R","2026-07-01":"R","2026-07-02":"R","2026-07-03":"R","2026-07-06":"M","2026-07-07":"M","2026-07-08":"M","2026-07-09":"M","2026-07-10":"M","2026-07-13":"T","2026-07-18":"FN","2026-07-19":"FN","2026-07-21":"T","2026-07-22":"T","2026-07-23":"T","2026-07-24":"T","2026-07-27":"N","2026-07-28":"N","2026-07-29":"N","2026-07-30":"N","2026-07-31":"N","2026-08-03":"T","2026-08-08":"FM","2026-08-09":"FM","2026-08-11":"R","2026-08-12":"R","2026-08-13":"R","2026-08-14":"R","2026-08-17":"M","2026-08-18":"M","2026-08-19":"M","2026-08-20":"M","2026-08-21":"M","2026-08-24":"N","2026-08-25":"N","2026-08-26":"N","2026-08-27":"N","2026-08-28":"N","2026-08-31":"V","2026-09-01":"V","2026-09-02":"V","2026-09-03":"V","2026-09-04":"V","2026-09-21":"V","2026-09-22":"V","2026-09-23":"V","2026-09-24":"V","2026-09-25":"V","2026-10-13":"V","2026-10-14":"V","2026-10-15":"R","2026-10-16":"R"}},{"name":"Juan Pablo Fernández Rachela","dept":"Operaciones","shifts":{"2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"V","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"V","2026-04-02":"V","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"V","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"N","2026-05-16":"FN","2026-05-17":"FN","2026-05-19":"T","2026-05-20":"T","2026-05-21":"T","2026-05-22":"T","2026-05-25":"M","2026-05-30":"FM","2026-05-31":"FM","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"N","2026-06-13":"FM","2026-06-14":"FM","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"N","2026-06-25":"N","2026-06-26":"N","2026-06-29":"T","2026-07-04":"FN","2026-07-05":"FN","2026-07-07":"T","2026-07-08":"T","2026-07-09":"T","2026-07-10":"T","2026-07-13":"N","2026-07-14":"N","2026-07-15":"N","2026-07-16":"N","2026-07-17":"N","2026-07-20":"R","2026-07-25":"FM","2026-07-26":"FM","2026-07-28":"V","2026-07-29":"V","2026-07-30":"V","2026-07-31":"V","2026-08-03":"M","2026-08-04":"M","2026-08-05":"M","2026-08-06":"M","2026-08-07":"M","2026-08-10":"R","2026-08-15":"FN","2026-08-16":"FN","2026-08-18":"T","2026-08-19":"T","2026-08-20":"T","2026-08-21":"T","2026-08-24":"T","2026-08-29":"FN","2026-08-30":"FN","2026-09-28":"V","2026-09-29":"V","2026-09-30":"V","2026-10-01":"V","2026-10-02":"V","2026-12-07":"V","2026-12-09":"V","2026-12-10":"V","2026-12-11":"V"}},{"name":"Teo Valentin Marpegan","dept":"Operaciones","shifts":{"2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"T","2026-05-09":"FN","2026-05-10":"FN","2026-05-12":"T","2026-05-13":"T","2026-05-14":"T","2026-05-15":"T","2026-05-18":"M","2026-05-23":"FM","2026-05-24":"FM","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"N","2026-06-02":"N","2026-06-03":"N","2026-06-04":"N","2026-06-05":"N","2026-06-08":"T","2026-06-13":"FN","2026-06-14":"FN","2026-06-16":"T","2026-06-17":"T","2026-06-18":"T","2026-06-19":"T","2026-06-22":"N","2026-06-25":"N","2026-06-26":"N","2026-06-29":"R","2026-07-04":"FM","2026-07-05":"FM","2026-07-07":"R","2026-07-08":"R","2026-07-09":"R","2026-07-10":"R","2026-07-13":"M","2026-07-14":"M","2026-07-15":"M","2026-07-16":"M","2026-07-17":"M","2026-07-20":"T","2026-07-25":"FN","2026-07-26":"FN","2026-07-28":"T","2026-07-29":"T","2026-07-30":"T","2026-07-31":"T","2026-08-03":"N","2026-08-04":"N","2026-08-05":"N","2026-08-06":"N","2026-08-07":"N","2026-08-10":"T","2026-08-15":"FM","2026-08-16":"FM","2026-08-18":"R","2026-08-19":"R","2026-08-20":"R","2026-08-21":"R","2026-08-24":"M","2026-08-25":"M","2026-08-26":"M","2026-08-27":"M","2026-08-28":"M","2026-09-21":"V","2026-09-22":"V","2026-09-23":"V","2026-09-24":"V","2026-09-25":"V","2026-09-28":"V","2026-09-29":"V","2026-09-30":"V","2026-10-01":"V","2026-10-02":"V","2026-12-09":"V","2026-12-10":"V","2026-12-11":"V","2026-12-21":"V","2026-12-22":"V","2026-12-23":"V","2026-12-24":"V"}},{"name":"Alejandro Nicolas Gomez","dept":"Operaciones","shifts":{"2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-09":"FM","2026-05-10":"FM","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"T","2026-05-23":"FN","2026-05-24":"FN","2026-05-26":"N","2026-05-27":"N","2026-05-28":"N","2026-05-29":"N","2026-06-01":"M","2026-06-06":"FM","2026-06-07":"FM","2026-06-09":"N","2026-06-10":"N","2026-06-11":"N","2026-06-12":"N","2026-06-15":"T","2026-06-20":"FN","2026-06-21":"FN","2026-06-25":"T","2026-06-26":"T","2026-06-29":"N","2026-06-30":"N","2026-07-01":"N","2026-07-02":"N","2026-07-03":"N","2026-07-06":"M","2026-07-11":"FM","2026-07-12":"FM","2026-07-14":"R","2026-07-15":"R","2026-07-16":"R","2026-07-17":"R","2026-07-20":"M","2026-07-21":"M","2026-07-22":"M","2026-07-23":"M","2026-07-24":"M","2026-07-27":"T","2026-08-01":"FN","2026-08-02":"FN","2026-08-04":"T","2026-08-05":"T","2026-08-06":"T","2026-08-07":"T","2026-08-10":"N","2026-08-11":"N","2026-08-12":"N","2026-08-13":"N","2026-08-14":"N","2026-08-17":"T","2026-08-22":"FM","2026-08-23":"FM","2026-08-25":"M","2026-08-26":"M","2026-08-27":"M","2026-08-28":"M","2026-08-31":"V","2026-09-01":"V","2026-09-02":"V","2026-09-03":"V","2026-09-04":"V","2026-11-02":"V","2026-11-03":"V","2026-11-04":"V","2026-11-05":"V","2026-11-06":"V","2026-11-09":"V","2026-11-10":"V","2026-11-11":"V","2026-11-12":"V","2026-11-13":"V","2026-11-16":"V","2026-11-17":"V"}},{"name":"Andreea Ionescu","dept":"Operaciones","shifts":{"2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"M","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"T","2026-06-02":"T","2026-06-03":"T","2026-06-04":"T","2026-06-05":"T","2026-06-08":"N","2026-06-09":"N","2026-06-10":"N","2026-06-11":"N","2026-06-12":"N","2026-06-15":"M","2026-06-20":"FM","2026-06-21":"FM","2026-06-25":"M","2026-06-26":"M","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M","2026-07-06":"T","2026-07-11":"FN","2026-07-12":"FN","2026-07-14":"T","2026-07-15":"T","2026-07-16":"T","2026-07-17":"T","2026-07-20":"N","2026-07-21":"N","2026-07-22":"N","2026-07-23":"N","2026-07-24":"N","2026-07-27":"R","2026-08-01":"FM","2026-08-02":"FM","2026-08-04":"R","2026-08-05":"R","2026-08-06":"R","2026-08-07":"R","2026-08-10":"M","2026-08-11":"M","2026-08-12":"M","2026-08-13":"M","2026-08-14":"M","2026-08-17":"M","2026-08-22":"FN","2026-08-23":"FN","2026-08-25":"T","2026-08-26":"T","2026-08-27":"T","2026-08-28":"T"}},{"name":"Nicolás Flabián","dept":"Operaciones","shifts":{"2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"M","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"R","2026-06-02":"R","2026-06-03":"R","2026-06-04":"R","2026-06-05":"R","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-15":"N","2026-06-16":"N","2026-06-17":"N","2026-06-18":"N","2026-06-19":"N","2026-06-22":"T","2026-06-27":"FN","2026-06-28":"FN","2026-06-30":"T","2026-07-01":"T","2026-07-02":"T","2026-07-03":"T","2026-07-06":"N","2026-07-07":"N","2026-07-08":"N","2026-07-09":"N","2026-07-10":"N","2026-07-13":"M","2026-07-18":"FM","2026-07-19":"FM","2026-07-21":"R","2026-07-22":"R","2026-07-23":"R","2026-07-24":"R","2026-07-27":"M","2026-07-28":"M","2026-07-29":"M","2026-07-30":"M","2026-07-31":"M","2026-08-03":"M","2026-08-08":"FN","2026-08-09":"FN","2026-08-11":"T","2026-08-12":"T","2026-08-13":"T","2026-08-14":"T","2026-08-17":"N","2026-08-18":"N","2026-08-19":"N","2026-08-20":"N","2026-08-21":"N","2026-08-24":"T","2026-08-29":"FM","2026-08-30":"FM"}},{"name":"Mathias Moroni Ayala Garcia","dept":"Operaciones Coordinación","shifts":{"2026-01-12":"O","2026-01-13":"O","2026-01-14":"O","2026-01-15":"O","2026-01-16":"O","2026-01-19":"O","2026-01-20":"O","2026-01-21":"O","2026-01-22":"O","2026-01-23":"O","2026-01-26":"O","2026-01-27":"O","2026-01-28":"O","2026-01-29":"O","2026-01-30":"O","2026-02-02":"O","2026-02-03":"O","2026-02-04":"O","2026-02-05":"O","2026-02-06":"O","2026-02-09":"O","2026-02-10":"O","2026-02-11":"O","2026-02-12":"O","2026-02-13":"O","2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"V","2026-03-31":"V","2026-04-01":"V","2026-04-02":"V","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"M","2026-05-05":"M","2026-05-06":"M","2026-05-07":"M","2026-05-08":"M","2026-05-11":"T","2026-05-12":"T","2026-05-13":"T","2026-05-14":"T","2026-05-15":"T","2026-05-18":"N","2026-05-19":"N","2026-05-20":"N","2026-05-21":"N","2026-05-22":"N","2026-05-25":"M","2026-05-26":"M","2026-05-27":"M","2026-05-28":"M","2026-05-29":"M","2026-06-01":"T","2026-06-02":"T","2026-06-03":"T","2026-06-04":"T","2026-06-05":"T","2026-06-08":"N","2026-06-09":"N","2026-06-10":"N","2026-06-11":"N","2026-06-12":"N","2026-06-15":"M","2026-06-16":"M","2026-06-17":"M","2026-06-18":"M","2026-06-19":"M","2026-06-22":"V","2026-06-25":"V","2026-06-26":"V","2026-06-29":"T","2026-06-30":"T","2026-07-01":"T","2026-07-02":"T","2026-07-03":"T","2026-07-06":"N","2026-07-07":"N","2026-07-08":"N","2026-07-09":"N","2026-07-10":"N","2026-07-11":"GC","2026-07-12":"GC","2026-07-13":"M","2026-07-14":"M","2026-07-15":"M","2026-07-16":"M","2026-07-17":"M","2026-07-20":"T","2026-07-21":"T","2026-07-22":"T","2026-07-23":"T","2026-07-24":"T","2026-07-27":"N","2026-07-28":"N","2026-07-29":"N","2026-07-30":"N","2026-07-31":"N","2026-08-03":"M","2026-08-04":"M","2026-08-05":"M","2026-08-06":"M","2026-08-07":"M","2026-08-08":"GC","2026-08-09":"GC","2026-08-10":"T","2026-08-11":"T","2026-08-12":"T","2026-08-13":"T","2026-08-14":"T","2026-08-15":"GC","2026-08-16":"GC","2026-08-17":"N","2026-08-18":"N","2026-08-19":"N","2026-08-20":"N","2026-08-21":"N","2026-08-24":"V","2026-08-25":"V","2026-08-26":"V","2026-08-27":"V","2026-08-28":"V","2026-10-13":"V","2026-10-14":"V","2026-10-15":"V","2026-10-16":"V","2026-12-14":"V","2026-12-15":"V","2026-12-16":"V","2026-12-17":"V","2026-12-18":"V"}},{"name":"Marcell Koós","dept":"Operaciones Coordinación","shifts":{"2026-01-19":"O","2026-01-20":"O","2026-01-21":"O","2026-01-22":"O","2026-01-23":"O","2026-01-26":"O","2026-01-27":"O","2026-01-28":"O","2026-01-29":"O","2026-01-30":"O","2026-02-02":"O","2026-02-03":"O","2026-02-04":"O","2026-02-05":"O","2026-02-06":"O","2026-02-09":"O","2026-02-10":"O","2026-02-11":"O","2026-02-12":"O","2026-02-13":"O","2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"V","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"V","2026-04-10":"V","2026-04-13":"V","2026-04-14":"V","2026-04-15":"V","2026-04-17":"V","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"T","2026-05-05":"T","2026-05-06":"T","2026-05-07":"T","2026-05-08":"T","2026-05-11":"N","2026-05-12":"N","2026-05-13":"N","2026-05-14":"N","2026-05-15":"N","2026-05-18":"M","2026-05-19":"M","2026-05-20":"M","2026-05-21":"M","2026-05-22":"M","2026-05-25":"T","2026-05-26":"T","2026-05-27":"T","2026-05-28":"T","2026-05-29":"T","2026-06-01":"N","2026-06-02":"N","2026-06-03":"N","2026-06-04":"N","2026-06-05":"N","2026-06-08":"M","2026-06-09":"M","2026-06-10":"M","2026-06-11":"M","2026-06-12":"M","2026-06-15":"T","2026-06-16":"T","2026-06-17":"T","2026-06-18":"T","2026-06-19":"T","2026-06-22":"T","2026-06-25":"T","2026-06-26":"T","2026-06-29":"N","2026-06-30":"N","2026-07-01":"N","2026-07-02":"N","2026-07-03":"N","2026-07-06":"M","2026-07-07":"M","2026-07-08":"M","2026-07-09":"M","2026-07-10":"M","2026-07-13":"T","2026-07-14":"T","2026-07-15":"T","2026-07-16":"T","2026-07-17":"T","2026-07-18":"GC","2026-07-19":"GC","2026-07-20":"N","2026-07-21":"N","2026-07-22":"N","2026-07-23":"N","2026-07-24":"N","2026-07-27":"M","2026-07-28":"M","2026-07-29":"M","2026-07-30":"M","2026-07-31":"M","2026-08-01":"GC","2026-08-02":"GC","2026-08-03":"T","2026-08-04":"T","2026-08-05":"T","2026-08-06":"T","2026-08-07":"T","2026-08-10":"M","2026-08-11":"M","2026-08-12":"M","2026-08-13":"M","2026-08-14":"M","2026-08-17":"T","2026-08-18":"T","2026-08-19":"T","2026-08-20":"T","2026-08-21":"T","2026-08-24":"M","2026-08-25":"M","2026-08-26":"M","2026-08-27":"M","2026-08-28":"M","2026-08-29":"GC","2026-08-30":"GC"}},{"name":"Tomas de Sousa Garcia","dept":"Operaciones Coordinación","shifts":{"2026-02-02":"O","2026-02-03":"O","2026-02-04":"O","2026-02-05":"O","2026-02-06":"O","2026-02-09":"O","2026-02-10":"O","2026-02-11":"O","2026-02-12":"O","2026-02-13":"O","2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"O","2026-04-02":"O","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"V","2026-04-14":"V","2026-04-15":"V","2026-04-17":"V","2026-04-20":"V","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"V","2026-05-05":"V","2026-05-06":"V","2026-05-07":"V","2026-05-08":"V","2026-05-11":"M","2026-05-12":"M","2026-05-13":"M","2026-05-14":"M","2026-05-15":"M","2026-05-18":"T","2026-05-19":"T","2026-05-20":"T","2026-05-21":"T","2026-05-22":"T","2026-05-25":"N","2026-05-26":"N","2026-05-27":"N","2026-05-28":"N","2026-05-29":"N","2026-06-01":"M","2026-06-02":"M","2026-06-03":"M","2026-06-04":"M","2026-06-05":"M","2026-06-08":"T","2026-06-09":"T","2026-06-10":"T","2026-06-11":"T","2026-06-12":"T","2026-06-15":"N","2026-06-16":"N","2026-06-17":"N","2026-06-18":"N","2026-06-19":"N","2026-06-22":"M","2026-06-25":"M","2026-06-26":"M","2026-06-29":"M","2026-06-30":"M","2026-07-01":"M","2026-07-02":"M","2026-07-03":"M","2026-07-04":"GC","2026-07-05":"GC","2026-07-06":"T","2026-07-07":"T","2026-07-08":"T","2026-07-09":"T","2026-07-10":"T","2026-07-13":"N","2026-07-14":"N","2026-07-15":"N","2026-07-16":"N","2026-07-17":"N","2026-07-20":"M","2026-07-21":"M","2026-07-22":"M","2026-07-23":"M","2026-07-24":"M","2026-07-25":"GC","2026-07-26":"GC","2026-07-27":"T","2026-07-28":"T","2026-07-29":"T","2026-07-30":"T","2026-07-31":"T","2026-08-03":"N","2026-08-04":"N","2026-08-05":"N","2026-08-06":"N","2026-08-07":"N","2026-08-10":"V","2026-08-11":"V","2026-08-12":"V","2026-08-13":"V","2026-08-14":"V","2026-08-17":"M","2026-08-18":"M","2026-08-19":"M","2026-08-20":"M","2026-08-21":"M","2026-08-22":"GC","2026-08-23":"GC","2026-08-24":"T","2026-08-25":"T","2026-08-26":"T","2026-08-27":"T","2026-08-28":"T","2026-10-26":"V","2026-10-27":"V","2026-10-28":"V","2026-10-29":"V","2026-10-30":"V"}},{"name":"Bruno Verdú Belmar","dept":"Team Leader","shifts":{"2026-01-02":"V","2026-01-05":"V","2026-01-07":"O","2026-01-08":"O","2026-01-09":"O","2026-01-12":"O","2026-01-13":"O","2026-01-14":"O","2026-01-15":"O","2026-01-16":"V","2026-01-19":"O","2026-01-20":"O","2026-01-21":"O","2026-01-22":"O","2026-01-23":"O","2026-01-26":"O","2026-01-27":"O","2026-01-28":"O","2026-01-29":"O","2026-01-30":"V","2026-02-02":"O","2026-02-03":"O","2026-02-04":"O","2026-02-05":"O","2026-02-06":"O","2026-02-09":"O","2026-02-10":"O","2026-02-11":"O","2026-02-12":"O","2026-02-13":"O","2026-02-16":"O","2026-02-17":"O","2026-02-18":"O","2026-02-19":"O","2026-02-20":"O","2026-02-23":"O","2026-02-24":"O","2026-02-25":"O","2026-02-26":"O","2026-02-27":"O","2026-03-02":"O","2026-03-03":"O","2026-03-04":"O","2026-03-05":"O","2026-03-06":"O","2026-03-09":"O","2026-03-10":"O","2026-03-11":"O","2026-03-12":"O","2026-03-13":"O","2026-03-16":"O","2026-03-17":"O","2026-03-18":"O","2026-03-20":"O","2026-03-23":"O","2026-03-24":"O","2026-03-25":"O","2026-03-26":"O","2026-03-27":"O","2026-03-30":"O","2026-03-31":"O","2026-04-01":"V","2026-04-02":"V","2026-04-07":"O","2026-04-08":"O","2026-04-09":"O","2026-04-10":"O","2026-04-13":"O","2026-04-14":"O","2026-04-15":"O","2026-04-17":"O","2026-04-20":"O","2026-04-21":"O","2026-04-22":"O","2026-04-23":"O","2026-04-24":"O","2026-04-27":"O","2026-04-28":"O","2026-04-29":"O","2026-04-30":"O","2026-05-04":"O","2026-05-05":"O","2026-05-06":"O","2026-05-07":"O","2026-05-08":"O","2026-05-11":"O","2026-05-12":"O","2026-05-13":"O","2026-05-14":"O","2026-05-15":"O","2026-05-18":"O","2026-05-19":"O","2026-05-20":"O","2026-05-21":"O","2026-05-22":"O","2026-05-25":"O","2026-05-26":"O","2026-05-27":"O","2026-05-28":"O","2026-05-29":"O","2026-06-01":"O","2026-06-02":"O","2026-06-03":"O","2026-06-04":"O","2026-06-05":"O","2026-06-08":"O","2026-06-09":"O","2026-06-10":"O","2026-06-11":"O","2026-06-12":"O","2026-06-15":"O","2026-06-16":"O","2026-06-17":"O","2026-06-18":"O","2026-06-19":"O","2026-06-22":"O","2026-06-25":"O","2026-06-26":"O","2026-06-29":"O","2026-06-30":"O","2026-07-01":"O","2026-07-02":"O","2026-07-03":"O","2026-01-01":"O","2026-01-06":"O","2026-03-19":"O","2026-04-03":"O","2026-04-06":"O","2026-04-16":"O","2026-05-01":"O","2026-06-23":"O","2026-06-24":"O","2026-07-06":"O","2026-07-07":"O","2026-07-08":"O","2026-07-09":"O","2026-07-10":"O","2026-07-13":"O","2026-07-14":"O","2026-07-15":"O","2026-07-16":"O","2026-07-17":"O","2026-07-20":"O","2026-07-21":"O","2026-07-22":"O","2026-07-23":"O","2026-07-24":"O","2026-07-27":"O","2026-07-28":"O","2026-07-29":"O","2026-07-30":"O","2026-07-31":"O","2026-08-03":"O","2026-08-04":"O","2026-08-05":"O","2026-08-06":"O","2026-08-07":"O","2026-08-10":"O","2026-08-11":"O","2026-08-12":"O","2026-08-13":"O","2026-08-14":"O","2026-08-17":"O","2026-08-18":"O","2026-08-19":"O","2026-08-20":"O","2026-08-21":"O","2026-08-24":"O","2026-08-25":"O","2026-08-26":"O","2026-08-27":"O","2026-08-28":"O","2026-08-31":"O","2026-09-01":"O","2026-09-02":"O","2026-09-03":"O","2026-09-04":"O","2026-09-07":"O","2026-09-08":"O","2026-09-09":"O","2026-09-10":"O","2026-09-11":"O","2026-09-14":"O","2026-09-15":"O","2026-09-16":"O","2026-09-17":"O","2026-09-18":"O","2026-09-21":"O","2026-09-22":"O","2026-09-23":"O","2026-09-24":"O","2026-09-25":"O","2026-09-28":"O","2026-09-29":"O","2026-09-30":"O","2026-10-01":"O","2026-10-02":"O","2026-10-05":"O","2026-10-06":"O","2026-10-07":"O","2026-10-08":"O","2026-10-09":"O","2026-10-12":"O","2026-10-13":"O","2026-10-14":"O","2026-10-15":"O","2026-10-16":"O","2026-10-19":"O","2026-10-20":"O","2026-10-21":"O","2026-10-22":"O","2026-10-23":"O","2026-10-26":"O","2026-10-27":"O","2026-10-28":"O","2026-10-29":"O","2026-10-30":"O","2026-11-02":"O","2026-11-03":"O","2026-11-04":"O","2026-11-05":"O","2026-11-06":"O","2026-11-09":"O","2026-11-10":"O","2026-11-11":"O","2026-11-12":"O","2026-11-13":"O","2026-11-16":"O","2026-11-17":"O","2026-11-18":"O","2026-11-19":"O","2026-11-20":"O","2026-11-23":"O","2026-11-24":"O","2026-11-25":"O","2026-11-26":"O","2026-11-27":"O","2026-11-30":"O","2026-12-01":"O","2026-12-02":"O","2026-12-03":"O","2026-12-04":"O","2026-12-07":"O","2026-12-08":"O","2026-12-09":"O","2026-12-10":"O","2026-12-11":"O","2026-12-14":"O","2026-12-15":"O","2026-12-16":"O","2026-12-17":"O","2026-12-18":"O","2026-12-21":"O","2026-12-22":"O","2026-12-23":"O","2026-12-24":"O","2026-12-25":"O","2026-12-28":"O","2026-12-29":"O","2026-12-30":"O","2026-12-31":"O"}}];
+
+
+// ── VACATION ENTITLEMENTS (H26) ───────────────────────────────────────────────
+const VAC={
+  'Bruno Verdú Belmar':22,
+  'Mathias Moroni Ayala Garcia':21,
+  'Marcell Koós':21,
+  'Tomas de Sousa Garcia':20,
+  'Franco Matias Sanchez':20,
+  'Younes Jarir Ezzahraoui':19,
+  'Juan Patricio Sigwald Ciurca':19,
+  'David Aibar':19,
+  'Santiago Motilla':18,
+  'Fernando Mata Heras':18,
+  'Iván Cano del Molino':17,
+  'Juan Pablo Fernández Rachela':17,
+  'Teo Valentin Marpegan':17,
+  'Alejandro Nicolas Gomez':17,
+  'Andreea Ionescu':15,
+  'Nicolás Flabián':15,
+};
+function vacUsed(w){return Object.values(w.shifts).filter(v=>v==='V').length;}
+function vacRemaining(w){const e=VAC[w.name]||0;return e-vacUsed(w);}
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const EDITORS={'1973':'Bruno Verdú (TL)','2201':'Mathias Moroni','3308':'Marcell Koós','4412':'Tomas de Sousa'};
+const VALID=['M','T','N','R','FM','FN','GC','V','O'];
+const MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const WD=['do','lu','ma','mi','ju','vi','sá'];
+const HOURS={M:9,T:9,N:9,R:9,FM:12,FN:12,GC:8,V:0,O:8};
+const SK='verisure_ops24x7_2026_v8';
+const TODAY=new Date();
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let W=JSON.parse(JSON.stringify(BASE));
+let month=TODAY.getMonth(), roleFilter='all', shiftFilters=new Set();
+let editMode=false, editor=null, pin='', log=[], activePick=null;
+
+function load(){try{const s=localStorage.getItem(SK);if(s){const p=JSON.parse(s);p.forEach(d=>{const w=W.find(x=>x.name===d.name);if(w)w.shifts=d.shifts;});}}catch(e){}}
+function save(){try{localStorage.setItem(SK,JSON.stringify(W.map(w=>({name:w.name,shifts:w.shifts}))));} catch(e){}}
+load();
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const p2=n=>n.toString().padStart(2,'0');
+const dk=(m,d)=>`2026-${p2(m+1)}-${p2(d)}`;
+const dim=m=>new Date(2026,m+1,0).getDate();
+const isWE=(m,d)=>{const wd=new Date(2026,m,d).getDay();return wd===0||wd===6;};
+const isToday=(m,d)=>TODAY.getFullYear()===2026&&TODAY.getMonth()===m&&TODAY.getDate()===d;
+const grp=w=>w.dept==='Team Leader'?'tl':w.dept.includes('Coordinación')?'coord':'ops';
+const sft=(w,m,d)=>{const v=w.shifts[dk(m,d)];return(v&&VALID.includes(v))?v:'';};
+
+function monthHours(w){
+  let h=0;
+  const days=dim(month);
+  for(let d=1;d<=days;d++){const s=sft(w,month,d);if(s)h+=HOURS[s]||0;}
+  return h;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render(){
+  const days=dim(month);
+  // Head — no sticky, just normal header
+  const thr=document.getElementById('tHead');
+  let h=`<th class="th-name">Nombre y Apellidos</th>`;
+  for(let d=1;d<=days;d++){
+    const wd=new Date(2026,month,d).getDay();
+    const we=isWE(month,d), tod=isToday(month,d);
+    const cls=we?'we':tod?'tod':'';
+    const numEl=tod?`<span class="today-num">${d}</span>`:`<span class="day-num">${d}</span>`;
+    h+=`<th class="th-day${cls?' '+cls:''}">${numEl}<span class="day-wd">${WD[wd]}</span></th>`;
+  }
+  h+=`<th class="th-total">Total</th>`;
+  h+=`<th class="th-vac th-vac-used" title="Días de vacaciones usados en el año">V Usados</th>`;
+  h+=`<th class="th-vac th-vac-pend" title="Días de vacaciones pendientes">V Pendientes</th>`;
+  thr.innerHTML=h;
+
+  // Groups — TL first, then coord, then ops
+  const groups=[
+    {label:'Team Leader',g:'tl',secClass:'section-tl'},
+    {label:'Coordinación',g:'coord',secClass:'section-coord'},
+    {label:'Operadores',g:'ops',secClass:'section-row'}
+  ];
+
+  let b='';
+  groups.forEach(({label,g,secClass})=>{
+    if(roleFilter!=='all'&&roleFilter!==g) return;
+    const ws=W.filter(w=>grp(w)===g);
+    if(!ws.length) return;
+    b+=`<tr class="${secClass}"><td colspan="${days+4}">${label}</td></tr>`;
+    ws.forEach(w=>{
+      const wi=W.indexOf(w);
+      const isTL=g==='tl';
+      const badge=isTL?'<span class="tl-badge">TL</span>':'';
+      const nameCls=isTL?'worker-tl':g==='coord'?'worker-coord':'worker-op';
+      const rowCls=isTL?'tl-row':'';
+      const hrs=monthHours(w);
+      b+=`<tr class="${rowCls}" data-name="${w.name.toLowerCase()}" data-group="${g}">`;
+      b+=`<td class="td-name"><div class="worker-wrap">${badge}<span class="worker-name ${nameCls}">${w.name}</span></div></td>`;
+      for(let d=1;d<=days;d++){
+        const s=sft(w,month,d);
+        const we=isWE(month,d), tod=isToday(month,d);
+        const tdCls=`td-shift${we?' we':''}${tod?' tod':''}`;
+        b+=`<td class="${tdCls}" data-wi="${wi}" data-dk="${dk(month,d)}" onclick="cellClick(event,${wi},'${dk(month,d)}')">`;
+        if(s){
+          const hl=shiftFilters.size>0&&!shiftFilters.has(s)?'':'';
+          b+=`<span class="sb sb-${s}">${s}</span>`;
+        }
+        b+=`</td>`;
+      }
+      b+=`<td class="td-total">${hrs>0?hrs+'h':''}</td>`;
+      const vUsed=vacUsed(w), vTot=VAC[w.name]||0, vRem=vTot-vUsed;
+      const remCls=vRem>0?'vac-pend-pos':vRem<0?'vac-pend-neg':'vac-pend-zero';
+      const usedPct=vTot>0?Math.round(vUsed/vTot*100):0;
+      const usedCls=usedPct>=100?'vac-used-full':usedPct>=80?'vac-used-hi':usedPct>=50?'vac-used-mid':'vac-used-lo';
+      b+=`<td class="td-vac td-vac-used ${usedCls}" title="${vUsed} días usados de ${vTot} (${usedPct}%)">${vUsed}<span class="vac-of">/${vTot}</span></td>`;
+      b+=`<td class="td-vac td-vac-pend ${remCls}" title="${Math.abs(vRem)} días ${vRem>=0?'pendientes':'excedidos'}">${vRem>0?'+'+vRem:vRem}</td>`;
+      b+=`</tr>`;
+    });
+  });
+  document.getElementById('tBody').innerHTML=b;
+  document.getElementById('monthLabel').textContent=`${MES[month]} 2026`;
+  applyFilters();
+  applyShiftHighlight();
+  renderStats();
+}
+
+function renderStats(){
+  const days=dim(month);
+  const cnt={};VALID.forEach(s=>cnt[s]=0);
+  const ws=roleFilter==='all'?W:W.filter(w=>grp(w)===roleFilter);
+  ws.forEach(w=>{for(let d=1;d<=days;d++){const s=sft(w,month,d);if(s)cnt[s]++;}});
+  const col={M:'#1D4ED8',T:'#92400E',N:'#5B21B6',R:'#0E7490',FM:'#15803D',FN:'#3730A3',GC:'#C2410C',V:'#065F46',O:'#6B7280'};
+  const lbl={M:'Mañana',T:'Tarde',N:'Noche',R:'Refuerzo',FM:'Finde Día',FN:'Finde Noche',GC:'Guardia',V:'Vacaciones',O:'Oficina'};
+  document.getElementById('statsBar').innerHTML=Object.entries(cnt)
+    .filter(([k,v])=>v>0)
+    .map(([k,v])=>`<div class="stat-pill"><div class="stat-dot" style="background:${col[k]}"></div><span class="stat-val">${v}</span><span class="stat-lbl">${lbl[k]}</span></div>`)
+    .join('');
+}
+
+// ── FILTER SYSTEM ─────────────────────────────────────────────────────────────
+function applyFilters(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('#tBody tr[data-name]').forEach(tr=>{
+    const name=tr.dataset.name||'';
+    const grpMatch=roleFilter==='all'||tr.dataset.group===roleFilter;
+    const nameMatch=!q||name.includes(q);
+    tr.classList.toggle('row-hidden',!grpMatch||!nameMatch);
+  });
+  // Hide section rows if all their worker rows are hidden
+  document.querySelectorAll('#tBody tr.section-tl, #tBody tr.section-coord, #tBody tr.section-row').forEach(sec=>{
+    let next=sec.nextElementSibling;
+    let hasVisible=false;
+    while(next && !next.classList.contains('section-tl') && !next.classList.contains('section-coord') && !next.classList.contains('section-row')){
+      if(!next.classList.contains('row-hidden')) hasVisible=true;
+      next=next.nextElementSibling;
+    }
+    sec.classList.toggle('row-hidden',!hasVisible);
+  });
+}
+
+function setRole(el,role){
+  roleFilter=role;
+  document.querySelectorAll('[data-role]').forEach(b=>b.classList.toggle('active',b.dataset.role===role));
+  render();
+}
+
+function toggleShift(el,shift){
+  if(shiftFilters.has(shift)){
+    shiftFilters.delete(shift);
+    el.classList.remove('active','active-'+shift);
+  } else {
+    shiftFilters.add(shift);
+    el.classList.add('active','active-'+shift);
+  }
+  const badge=document.getElementById('shiftBadge');
+  badge.textContent=shiftFilters.size;
+  badge.classList.toggle('show',shiftFilters.size>0);
+  applyShiftHighlight();
+}
+
+function applyShiftHighlight(){
+  if(shiftFilters.size===0){
+    document.body.classList.remove('filter-shift');
+    document.querySelectorAll('.sb').forEach(el=>el.classList.remove('highlight'));
+    return;
+  }
+  document.body.classList.add('filter-shift');
+  document.querySelectorAll('.sb').forEach(el=>{
+    const s=el.className.match(/sb-(\w+)/)?.[1];
+    el.classList.toggle('highlight',shiftFilters.has(s));
+  });
+}
+
+function clearFilters(){
+  document.getElementById('searchInput').value='';
+  roleFilter='all';
+  shiftFilters.clear();
+  document.querySelectorAll('[data-role]').forEach(b=>b.classList.toggle('active',b.dataset.role==='all'));
+  document.querySelectorAll('.chip-shift').forEach(b=>{
+    b.className=b.className.replace(/\s*active(-\w+)?/g,'');
+  });
+  document.getElementById('shiftBadge').classList.remove('show');
+  document.body.classList.remove('filter-shift');
+  render();
+}
+
+// ── CELL / PICKER ─────────────────────────────────────────────────────────────
+function cellClick(e,wi,key){
+  if(!editMode) return;
+  e.stopPropagation();
+  closePicker();
+  activePick={wi,key};
+  showPicker(e.clientX,e.clientY,W[wi].shifts[key]||'');
+}
+function showPicker(x,y,cur){
+  const p=document.getElementById('picker');
+  let h=`<div class="picker-label">Seleccionar turno</div>`;
+  VALID.forEach(s=>{
+    const bg=getComputedStyle(document.documentElement).getPropertyValue(`--${s}-bg`).trim()||'#eee';
+    const tx=getComputedStyle(document.documentElement).getPropertyValue(`--${s}-tx`).trim()||'#333';
+    h+=`<span class="pk sb-${s}${s===cur?' sel':''}" onclick="applyShift('${s}')">${s}</span>`;
+  });
+  h+=`<button class="pk-clear" onclick="applyShift('')">✕ Quitar turno</button>`;
+  p.innerHTML=h;
+  const vw=window.innerWidth,vh=window.innerHeight;
+  let px=x+8,py=y+8;
+  if(px+240>vw)px=x-248; if(py+220>vh)py=y-228;
+  p.style.left=px+'px'; p.style.top=py+'px';
+  p.classList.add('show');
+}
+function applyShift(s){
+  if(!activePick) return;
+  const{wi,key}=activePick,w=W[wi],old=w.shifts[key]||'';
+  s===''?delete w.shifts[key]:w.shifts[key]=s;
+  const now=new Date(),t=`${p2(now.getHours())}:${p2(now.getMinutes())}`;
+  log.unshift({t,editor,worker:w.name,date:key,from:old,to:s});
+  if(log.length>100)log.pop();
+  save(); closePicker(); render();
+  // Refresh vac panel if open
+  const vp=document.getElementById('vacPanel');
+  if(vp&&vp.style.display!=='none') renderVacPanel();
+  if(document.getElementById('changelogEl').classList.contains('show')) renderLog();
+}
+function closePicker(){document.getElementById('picker').classList.remove('show');activePick=null;}
+document.addEventListener('click',e=>{if(!document.getElementById('picker').contains(e.target))closePicker();});
+
+// ── EDIT MODE ─────────────────────────────────────────────────────────────────
+function toggleEdit(){editMode?logout():document.getElementById('pinModal').classList.add('show');}
+function logout(){
+  editMode=false; editor=null;
+  document.body.classList.remove('edit-mode');
+  document.getElementById('editBanner').classList.remove('show');
+  document.getElementById('editBtn').classList.remove('on');
+  document.getElementById('editorToolbar').classList.remove('show');
+  document.getElementById('changelogEl').classList.remove('show');
+}
+
+// ── PIN ───────────────────────────────────────────────────────────────────────
+function pk(k){
+  if(k==='C'){pin='';upd();document.getElementById('pinErr').textContent='';return;}
+  if(k==='D'){pin=pin.slice(0,-1);upd();return;}
+  if(pin.length>=4)return;
+  pin+=k; upd();
+  if(pin.length===4)setTimeout(chk,150);
+}
+function upd(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('on',i<pin.length);}
+function chk(){
+  if(EDITORS[pin]){
+    editor=EDITORS[pin];
+    document.getElementById('pinModal').classList.remove('show');
+    editMode=true;
+    document.body.classList.add('edit-mode');
+    document.getElementById('editBanner').classList.add('show');
+    document.getElementById('editorName').textContent=`Modo editor · ${editor}`;
+    document.getElementById('editBtn').classList.add('on');
+    document.getElementById('editorToolbar').classList.add('show');
+    pin=''; upd();
+  } else {
+    document.getElementById('pinErr').textContent='PIN incorrecto. Inténtalo de nuevo.';
+    pin=''; upd();
+  }
+}
+function closePin(){document.getElementById('pinModal').classList.remove('show');pin='';upd();document.getElementById('pinErr').textContent='';}
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('pinModal').classList.contains('show'))return;
+  if(e.key>='0'&&e.key<='9')pk(e.key);
+  else if(e.key==='Backspace')pk('D');
+  else if(e.key==='Escape')closePin();
+});
+
+// ── EXPORT / IMPORT ───────────────────────────────────────────────────────────
+function exportData(){
+  document.getElementById('expTitle').textContent='Exportar datos del planning';
+  document.getElementById('expDesc').textContent='Copia o descarga este JSON como backup. Importa en cualquier copia del HTML para sincronizar.';
+  document.getElementById('expArea').value=JSON.stringify(W.map(w=>({name:w.name,shifts:w.shifts})),null,2);
+  document.getElementById('expActions').innerHTML=`<button class="btn btn-red" onclick="dlJSON()">⬇ Descargar</button><button class="btn" onclick="cpJSON()">📋 Copiar</button><button class="btn" onclick="closeExp()">Cerrar</button>`;
+  document.getElementById('expModal').classList.add('show');
+}
+function showImport(){
+  document.getElementById('expTitle').textContent='Importar datos del planning';
+  document.getElementById('expDesc').textContent='Pega aquí un JSON exportado previamente. Los datos actuales se sobrescribirán.';
+  document.getElementById('expArea').value='';
+  document.getElementById('expActions').innerHTML=`<button class="btn btn-red" onclick="impJSON()">⬆ Importar</button><button class="btn" onclick="closeExp()">Cancelar</button>`;
+  document.getElementById('expModal').classList.add('show');
+}
+function closeExp(){document.getElementById('expModal').classList.remove('show');}
+function dlJSON(){
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(document.getElementById('expArea').value);
+  a.download=`verisure_ops_turnos_${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+function cpJSON(){navigator.clipboard.writeText(document.getElementById('expArea').value).then(()=>{const b=event.target;b.textContent='✓ Copiado';setTimeout(()=>b.textContent='📋 Copiar',2000);});}
+function impJSON(){try{const p=JSON.parse(document.getElementById('expArea').value);p.forEach(d=>{const w=W.find(x=>x.name===d.name);if(w)w.shifts=d.shifts;});save();closeExp();render();alert('Datos importados correctamente.');}catch(e){alert('JSON inválido.');}}
+
+// ── CHANGELOG ─────────────────────────────────────────────────────────────────
+function toggleChangelog(){const e=document.getElementById('changelogEl');e.classList.toggle('show');if(e.classList.contains('show'))renderLog();}
+function renderLog(){
+  const l=document.getElementById('clList');
+  if(!log.length){l.innerHTML='<div class="cl-item" style="color:var(--muted)">Sin cambios en esta sesión.</div>';return;}
+  l.innerHTML=log.map(c=>`<div class="cl-item"><span class="cl-time">${c.t}</span><span class="cl-who">${c.editor.split(' ')[0]}</span><span>${c.worker.split(' ')[0]}</span><span style="color:var(--muted)">·</span><span style="color:var(--muted)">${c.date.slice(5)}</span><span style="color:var(--muted)">${c.from||'—'} → ${c.to||'—'}</span></div>`).join('');
+}
+function clearLog(){log=[];renderLog();}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function changeMonth(d){month=Math.max(0,Math.min(11,month+d));render();}
+function goToday(){
+  if(TODAY.getFullYear()===2026){
+    month=TODAY.getMonth(); render();
+    setTimeout(()=>{const t=document.querySelector('.tod');if(t)t.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},50);
+  }
+}
+
+// ── VAC PANEL ─────────────────────────────────────────────────────────────────
+function toggleVacPanel(){
+  const p=document.getElementById('vacPanel');
+  const visible=p.style.display!=='none';
+  p.style.display=visible?'none':'block';
+  document.getElementById('vacBtn').classList.toggle('btn-red',!visible);
+  if(!visible) renderVacPanel();
+}
+function renderVacPanel(){
+  const grid=document.getElementById('vacGrid');
+  const sorted=[...W].sort((a,b)=>(VAC[b.name]||0)-(VAC[a.name]||0));
+  grid.innerHTML=sorted.map(w=>{
+    const tot=VAC[w.name]||0, used=vacUsed(w), rem=tot-used;
+    const pct=tot>0?Math.round(used/tot*100):0;
+    const barCol=rem<0?'#DC2626':rem===0?'#15803D':'#0E7490';
+    const isTL=grp(w)==='tl', isCoord=grp(w)==='coord';
+    const nameCls=isTL?'color:#BE123C;font-weight:700':isCoord?'color:#7C3AED;font-weight:600':'';
+    return `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-width:180px;flex:1 1 180px;">
+      <div style="font-size:11px;font-weight:600;${nameCls};margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name.split(' ')[0]} ${w.name.split(' ').slice(-1)[0]}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${barCol};border-radius:3px;transition:.3s;"></div>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:${barCol};white-space:nowrap;">${used}/${tot}</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);">${rem>0?'<span style="color:#15803D">'+rem+' días pendientes</span>':rem<0?'<span style="color:#DC2626">'+Math.abs(rem)+' días excedidos</span>':'<span style="color:var(--muted)">Vacaciones completadas</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+render();
+</script>
+</body>
+</html>
