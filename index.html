@@ -483,6 +483,24 @@ body.edit-mode .td-shift:hover .sb { transform:scale(1.15); }
 .vac-used-hi   { color:#EA580C !important; }
 .vac-used-mid  { color:#0E7490 !important; }
 .vac-used-lo   { color:#15803D !important; }
+
+/* ── ALERTS PANEL (Fase 1) ── */
+.alerts-panel { background:#fff; border:1px solid var(--border); border-left:4px solid var(--red); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:none; box-shadow:0 1px 4px rgba(0,0,0,.05); }
+.alerts-panel.show { display:block; }
+.alerts-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+.alerts-title { font-size:11px; font-weight:800; color:var(--text); letter-spacing:.08em; text-transform:uppercase; }
+.alerts-summary { font-size:11px; color:var(--muted); }
+.alerts-list { display:grid; gap:6px; max-height:220px; overflow:auto; }
+.alert-item { display:flex; gap:8px; align-items:flex-start; font-size:11px; line-height:1.35; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:7px 9px; }
+.alert-item.error { border-color:#fecaca; background:#fff5f5; }
+.alert-item.warn { border-color:#fed7aa; background:#fff7ed; }
+.alert-item.info { border-color:#bfdbfe; background:#eff6ff; }
+.alert-tag { flex-shrink:0; min-width:42px; text-align:center; border-radius:999px; padding:1px 6px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+.alert-item.error .alert-tag { background:#fee2e2; color:#b91c1c; }
+.alert-item.warn .alert-tag { background:#ffedd5; color:#c2410c; }
+.alert-item.info .alert-tag { background:#dbeafe; color:#1d4ed8; }
+.alert-empty { color:#15803D; font-size:12px; font-weight:600; }
+
 </style>
 </head>
 <body>
@@ -588,6 +606,16 @@ body.edit-mode .td-shift:hover .sb { transform:scale(1.15); }
 <!-- MAIN -->
 <main>
   <div class="stats-strip" id="statsBar"></div>
+  <div class="alerts-panel" id="alertsPanel">
+    <div class="alerts-head">
+      <div>
+        <div class="alerts-title">Alertas operativas del mes</div>
+        <div class="alerts-summary" id="alertsSummary"></div>
+      </div>
+      <button class="btn" onclick="toggleAlertsPanel()" style="padding:3px 8px;font-size:10px;">Ocultar</button>
+    </div>
+    <div class="alerts-list" id="alertsList"></div>
+  </div>
   <div id="vacPanel" style="display:none;margin-bottom:12px;">
     <div class="table-card" style="padding:14px 18px;">
       <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">
@@ -612,6 +640,7 @@ body.edit-mode .td-shift:hover .sb { transform:scale(1.15); }
     <button class="btn" onclick="exportData()" style="color:#15803D;border-color:rgba(21,128,61,.4)">⬇ Exportar JSON</button>
     <button class="btn btn-editor" onclick="showImport()">⬆ Importar JSON</button>
     <button class="btn" onclick="toggleChangelog()">📋 Historial</button>
+    <button class="btn" onclick="showSnapshots()">↶ Snapshots</button>
     <button class="btn" onclick="logout()" style="color:#DC2626;border-color:rgba(220,38,38,.3)">Salir</button>
   </div>
   <div class="changelog" id="changelogEl">
@@ -787,6 +816,9 @@ const MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Se
 const WD=['do','lu','ma','mi','ju','vi','sá'];
 const HOURS={M:9,T:9,N:9,R:9,FM:12,FN:12,GC:8,V:0,O:8};
 const SK='verisure_ops24x7_2026_v8';
+const SNAP_KEY=SK+'_snapshots_v1';
+const COVERAGE_RULES={weekday:{M:1,T:1,N:1},weekend:{FM:1,FN:1}};
+const MAX_MONTH_HOURS=180;
 const TODAY=new Date();
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -840,6 +872,82 @@ function monthHours(w){
   const days=dim(month);
   for(let d=1;d<=days;d++){const s=sft(w,month,d);if(s)h+=HOURS[s]||0;}
   return h;
+}
+
+
+
+// ── VALIDATIONS / ALERTS (Fase 1) ───────────────────────────────────────────
+function addAlert(list, level, msg, meta={}){ list.push({level,msg,...meta}); }
+function nextDateKey(key){ const d=new Date(key+'T00:00:00'); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`; }
+function validatePlanning(){
+  const alerts=[];
+  const days=dim(month);
+  for(let d=1; d<=days; d++){
+    const key=dk(month,d);
+    const counts={}; VALID.forEach(s=>counts[s]=0);
+    W.forEach(w=>{ const s=w.shifts[key]; if(VALID.includes(s)) counts[s]++; });
+    const rules=isWE(month,d)?COVERAGE_RULES.weekend:COVERAGE_RULES.weekday;
+    Object.entries(rules).forEach(([shift,min])=>{
+      if((counts[shift]||0)<min) addAlert(alerts,'error',`${key}: cobertura insuficiente de ${shift}. Hay ${counts[shift]||0}, mínimo ${min}.`,{date:key,shift});
+    });
+    if((counts.GC||0)>1) addAlert(alerts,'warn',`${key}: hay ${counts.GC} guardias de coordinación el mismo día.`,{date:key,shift:'GC'});
+  }
+  W.forEach(w=>{
+    const hours=monthHours(w);
+    if(hours>MAX_MONTH_HOURS) addAlert(alerts,'warn',`${w.name}: ${hours}h planificadas en ${MES[month]}, supera ${MAX_MONTH_HOURS}h.`,{worker:w.name});
+    const vTot=(window.VAC||{})[w.name]||0, vUsed=vacUsed(w);
+    if(vTot && vUsed>vTot) addAlert(alerts,'error',`${w.name}: vacaciones excedidas (${vUsed}/${vTot}).`,{worker:w.name});
+    let consecutiveN=0;
+    for(let d=1; d<=days; d++){
+      const key=dk(month,d), s=sft(w,month,d);
+      if(s==='N'){
+        consecutiveN++;
+        const nk=nextDateKey(key), ns=w.shifts[nk]||'';
+        if(['M','R','O','FM','GC'].includes(ns)) addAlert(alerts,'error',`${w.name}: posible descanso insuficiente tras noche (${key} N → ${nk} ${ns}).`,{worker:w.name,date:key});
+        else if(['T','FN'].includes(ns)) addAlert(alerts,'warn',`${w.name}: revisar descanso tras noche (${key} N → ${nk} ${ns}).`,{worker:w.name,date:key});
+      } else {
+        if(consecutiveN>3) addAlert(alerts,'warn',`${w.name}: ${consecutiveN} noches consecutivas hasta ${dk(month,d-1)}.`,{worker:w.name});
+        consecutiveN=0;
+      }
+    }
+    if(consecutiveN>3) addAlert(alerts,'warn',`${w.name}: ${consecutiveN} noches consecutivas al cierre de ${MES[month]}.`,{worker:w.name});
+  });
+  return alerts.sort((a,b)=>({error:0,warn:1,info:2}[a.level]-({error:0,warn:1,info:2}[b.level]));
+}
+let alertsHiddenByUser=false;
+function renderAlerts(){
+  const panel=document.getElementById('alertsPanel'), list=document.getElementById('alertsList'), summary=document.getElementById('alertsSummary');
+  if(!panel||!list||!summary) return;
+  const alerts=validatePlanning(), errors=alerts.filter(a=>a.level==='error').length, warns=alerts.filter(a=>a.level==='warn').length;
+  summary.textContent=alerts.length?`${errors} críticas · ${warns} avisos`:'Sin alertas detectadas';
+  if(!alerts.length){ panel.classList.add('show'); list.innerHTML='<div class="alert-empty">✓ No se han detectado problemas básicos de cobertura, descanso o vacaciones.</div>'; return; }
+  panel.classList.toggle('show',!alertsHiddenByUser);
+  list.innerHTML=alerts.slice(0,80).map(a=>`<div class="alert-item ${a.level}"><span class="alert-tag">${a.level}</span><span>${a.msg}</span></div>`).join('') + (alerts.length>80?`<div class="alert-item info"><span class="alert-tag">info</span><span>Hay ${alerts.length-80} alertas adicionales no mostradas.</span></div>`:'');
+}
+function toggleAlertsPanel(){ alertsHiddenByUser=!alertsHiddenByUser; document.getElementById('alertsPanel')?.classList.toggle('show',!alertsHiddenByUser); }
+
+// ── LOCAL SNAPSHOTS / ROLLBACK (Fase 1) ──────────────────────────────────────
+function getSnapshots(){ try { return JSON.parse(localStorage.getItem(SNAP_KEY)||'[]'); } catch(e){ return []; } }
+function saveSnapshots(snaps){ try { localStorage.setItem(SNAP_KEY, JSON.stringify(snaps.slice(0,20))); } catch(e){} }
+function createSnapshot(reason='Cambio manual'){
+  if(!W.length) return;
+  const snap={id:Date.now(),at:new Date().toISOString(),editor:editor||'sistema',reason,data:W.map(w=>({name:w.name,shifts:{...w.shifts}}))};
+  const snaps=getSnapshots(); snaps.unshift(snap); saveSnapshots(snaps);
+}
+function restoreSnapshot(id){
+  const snap=getSnapshots().find(s=>String(s.id)===String(id));
+  if(!snap) return alert('Snapshot no encontrado.');
+  createSnapshot('Antes de restaurar snapshot');
+  snap.data.forEach(d=>{ const w=W.find(x=>x.name===d.name); if(w) w.shifts=d.shifts; });
+  save(); closeExp(); render(); alert('Snapshot restaurado correctamente.');
+}
+function showSnapshots(){
+  const snaps=getSnapshots();
+  document.getElementById('expTitle').textContent='Snapshots locales';
+  document.getElementById('expDesc').textContent='Restauran una copia local anterior del planning. Se guarda otro snapshot justo antes de restaurar.';
+  document.getElementById('expArea').style.display='none';
+  document.getElementById('expActions').innerHTML=snaps.length?snaps.map(s=>{ const d=new Date(s.at).toLocaleString('es-ES',{dateStyle:'short',timeStyle:'short'}); return `<button class="btn" onclick="restoreSnapshot(${s.id})">↶ ${d} · ${s.editor}</button>`; }).join('') + '<button class="btn" onclick="closeExp()">Cerrar</button>' : '<span style="font-size:12px;color:var(--muted);">No hay snapshots todavía.</span><button class="btn" onclick="closeExp()">Cerrar</button>';
+  document.getElementById('expModal').classList.add('show');
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
@@ -908,6 +1016,7 @@ function render(){
   applyFilters();
   applyShiftHighlight();
   renderStats();
+  renderAlerts();
 }
 
 function renderStats(){
@@ -1017,6 +1126,8 @@ function showPicker(x,y,cur){
 function applyShift(s){
   if(!activePick) return;
   const{wi,key}=activePick,w=W[wi],old=w.shifts[key]||'';
+  if(old===s){ closePicker(); return; }
+  createSnapshot(`Antes de cambiar ${w.name} ${key}`);
   s===''?delete w.shifts[key]:w.shifts[key]=s;
   const now=new Date(),t=`${p2(now.getHours())}:${p2(now.getMinutes())}`;
   log.unshift({t,editor,worker:w.name,date:key,from:old,to:s});
@@ -1089,14 +1200,14 @@ function showImport(){
   document.getElementById('expActions').innerHTML=`<button class="btn btn-red" onclick="impJSON()">⬆ Importar</button><button class="btn" onclick="closeExp()">Cancelar</button>`;
   document.getElementById('expModal').classList.add('show');
 }
-function closeExp(){document.getElementById('expModal').classList.remove('show');}
+function closeExp(){document.getElementById('expModal').classList.remove('show');document.getElementById('expArea').style.display='block';}
 function dlJSON(){
   const a=document.createElement('a');
   a.href='data:application/json;charset=utf-8,'+encodeURIComponent(document.getElementById('expArea').value);
   a.download=`verisure_ops_turnos_${new Date().toISOString().slice(0,10)}.json`; a.click();
 }
 function cpJSON(){navigator.clipboard.writeText(document.getElementById('expArea').value).then(()=>{const b=event.target;b.textContent='✓ Copiado';setTimeout(()=>b.textContent='📋 Copiar',2000);});}
-function impJSON(){try{const p=JSON.parse(document.getElementById('expArea').value);p.forEach(d=>{const w=W.find(x=>x.name===d.name);if(w)w.shifts=d.shifts;});save();closeExp();render();alert('Datos importados correctamente.');}catch(e){alert('JSON inválido.');}}
+function impJSON(){try{const p=JSON.parse(document.getElementById('expArea').value);if(!Array.isArray(p)) throw new Error('Formato esperado: array');const valid=p.every(d=>d&&typeof d.name==='string'&&d.shifts&&typeof d.shifts==='object');if(!valid) throw new Error('Estructura inválida');createSnapshot('Antes de importar JSON');p.forEach(d=>{const w=W.find(x=>x.name===d.name);if(w)w.shifts=d.shifts;});save();closeExp();render();alert('Datos importados correctamente.');}catch(e){alert('JSON inválido: '+e.message);}}
 
 // ── CHANGELOG ─────────────────────────────────────────────────────────────────
 function toggleChangelog(){const e=document.getElementById('changelogEl');e.classList.toggle('show');if(e.classList.contains('show'))renderLog();}
