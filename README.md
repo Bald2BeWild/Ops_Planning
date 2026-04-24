@@ -1,16 +1,9 @@
-# OPS 24x7 Command Center
+# OPS 24x7 Planning
 
-Rediseño visual del planning OPS 24x7 con enfoque Command Center.
+Aplicación web estática para visualizar y editar el planning OPS 24x7.
 
-## Incluye
-
-- Login y payload cifrado original.
-- Vista dashboard mensual.
-- Panel de alertas operativas.
-- Tabla mensual editable.
-- Panel lateral de detalle por persona.
-- Vacaciones, import/export JSON, snapshots e historial de sesión.
+## Versión
+Verisure Light v4: diseño claro con filtros integrados en la barra lateral izquierda.
 
 ## Uso
-
-Abre `index.html` en un navegador moderno o publícalo en GitHub Pages.
+Abre `index.html` en el navegador. Los cambios locales se guardan cifrados en `localStorage` tras iniciar sesión.
