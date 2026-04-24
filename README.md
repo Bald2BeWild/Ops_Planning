@@ -1,18 +1,16 @@
-# Planning OPS 24x7
+# OPS 24x7 Command Center
 
-Aplicación HTML estática para gestión visual de turnos 24x7.
+Rediseño visual del planning OPS 24x7 con enfoque Command Center.
 
-## Mejoras incluidas - Fase 1
+## Incluye
 
-- Panel de alertas operativas del mes.
-- Validaciones básicas de cobertura por día.
-- Avisos de descanso tras turno de noche.
-- Control de exceso de vacaciones.
-- Aviso de exceso de horas mensuales.
-- Snapshots locales antes de cambios e importaciones.
-- Restauración de snapshots desde la barra de editor.
-- Validación básica de estructura al importar JSON.
+- Login y payload cifrado original.
+- Vista dashboard mensual.
+- Panel de alertas operativas.
+- Tabla mensual editable.
+- Panel lateral de detalle por persona.
+- Vacaciones, import/export JSON, snapshots e historial de sesión.
 
 ## Uso
 
-Abre `index.html` en un navegador moderno. Para producción real se recomienda migrar autenticación, sincronización, datos y auditoría a backend.
+Abre `index.html` en un navegador moderno o publícalo en GitHub Pages.
