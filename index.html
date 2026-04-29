@@ -612,6 +612,24 @@ body{background:#F7F9FC!important;color:#0F172A!important;}
 
 
 .import-report{width:100%;padding:12px 14px;border-radius:12px;background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;font-size:12px;line-height:1.45}.import-report.error{background:#FEF2F2;border-color:#FECACA;color:#991B1B}.alert-detail-list{width:100%;max-height:360px;overflow:auto;display:flex;flex-direction:column;gap:8px}.alert-detail{padding:11px 12px;border-radius:12px;border:1px solid #E2E8F0;background:#F8FAFC;text-align:left;font-size:12px;line-height:1.35}.alert-detail strong{display:inline-block;margin-right:8px;text-transform:uppercase;font-size:10px;letter-spacing:.08em}.alert-detail span{display:block;color:#0F172A;margin-top:3px}.alert-detail em{display:inline-block;margin:7px 8px 0 0;color:#64748B;font-style:normal;font-size:11px}.alert-detail.error{background:#FEF2F2;border-color:#FECACA}.alert-detail.error strong{color:#DC2626}.alert-detail.warn{background:#FFFBEB;border-color:#FDE68A}.alert-detail.warn strong{color:#B45309}
+
+/* FASE 1 · Festivos Alicante 2026 */
+.th-day.hol{background:#FFF1F3!important;color:#BE123C!important;border-left:1px solid #FFC8D2!important;border-right:1px solid #FFC8D2!important;}
+.th-day.hol.we{background:#FFEAF0!important;}
+.th-day.hol.tod{background:#FFE1E8!important;}
+.th-day.hol .day-num{color:#BE123C!important;}
+.holiday-mark{display:block;margin-top:2px;font-size:8px;font-weight:950;color:#ED002F;letter-spacing:.02em;text-transform:uppercase;}
+.td-shift.hol{background:#FFF8FA!important;box-shadow:inset 0 0 0 1px rgba(237,0,47,.08);}
+.td-shift.hol.we{background:#FFF3F6!important;}
+.td-shift.hol.tod{background:#FFEFF3!important;}
+.stat-pill.holiday-stat{cursor:pointer;border-color:#FFC8D2!important;background:#FFF8FA!important;color:#BE123C!important;}
+.stat-pill.holiday-stat:hover{transform:translateY(-1px);background:#FFF1F3!important;border-color:#ED002F!important;}
+.holiday-legend{background:#FFF1F3!important;color:#ED002F!important;border:1px solid #FFC8D2!important;}
+.mini-day.holiday{border-color:#FFC8D2!important;background:#FFF8FA!important;color:#BE123C!important;position:relative;}
+.mini-holiday-dot{position:absolute;right:3px;top:3px;width:5px;height:5px;border-radius:999px;background:#ED002F;}
+.alert-detail.holiday{background:#FFF8FA!important;border-color:#FFC8D2!important;}
+.alert-detail.holiday strong{color:#ED002F!important;}
+
 </style>
 </head>
 <body class="light">
@@ -814,6 +832,7 @@ body{background:#F7F9FC!important;color:#0F172A!important;}
           <div class="li"><span class="lb" style="background:var(--GC-bg);color:var(--GC-tx);font-size:8px">GC</span> Guardia Coord</div>
           <div class="li"><span class="lb" style="background:var(--V-bg);color:var(--V-tx)">V</span> Vacaciones</div>
           <div class="li"><span class="lb" style="background:var(--O-bg);color:var(--O-tx)">O</span> Oficina 09–18h</div>
+          <div class="li"><span class="lb holiday-legend">★</span> Festivo Alicante</div>
         </div>
       </div>
     </div>
@@ -995,6 +1014,23 @@ const SK='verisure_ops24x7_2026_v8';
 const SNAP_KEY=SK+'_snapshots_v1';
 const COVERAGE_RULES={weekday:{M:1,T:1,N:1},weekend:{FM:1,FN:1}};
 const MAX_MONTH_HOURS=180;
+const HOLIDAYS_2026={
+  '2026-01-01':'Año Nuevo',
+  '2026-01-06':'Epifanía del Señor / Reyes',
+  '2026-03-19':'San José',
+  '2026-04-03':'Viernes Santo',
+  '2026-04-06':'Lunes de Pascua',
+  '2026-04-16':'Santa Faz · festivo local Alicante',
+  '2026-05-01':'Fiesta del Trabajo',
+  '2026-06-23':'Hogueras de San Juan · festivo local Alicante',
+  '2026-06-24':'San Juan',
+  '2026-08-15':'Asunción de la Virgen',
+  '2026-10-09':'Día de la Comunitat Valenciana',
+  '2026-10-12':'Fiesta Nacional de España',
+  '2026-12-08':'Inmaculada Concepción',
+  '2026-12-25':'Natividad del Señor'
+};
+
 const TODAY=new Date();
 const EDITOR_TTL_MS = 10 * 60 * 1000;
 const MAX_CHANGES_PER_MINUTE = 20;
@@ -1140,6 +1176,13 @@ const isWE=(m,d)=>{const wd=new Date(2026,m,d).getDay();return wd===0||wd===6;};
 const isToday=(m,d)=>TODAY.getFullYear()===2026&&TODAY.getMonth()===m&&TODAY.getDate()===d;
 const grp=w=>w.dept==='Team Leader'?'tl':w.dept.includes('Coordinación')?'coord':'ops';
 const sft=(w,m,d)=>{const v=w.shifts[dk(m,d)];return(v&&VALID.includes(v))?v:'';};
+function isHolidayKey(key){return Object.prototype.hasOwnProperty.call(HOLIDAYS_2026,key);}
+function holidayNameKey(key){return HOLIDAYS_2026[key]||'';}
+function monthHolidays(m=month){
+  const prefix=`2026-${p2(m+1)}-`;
+  return Object.entries(HOLIDAYS_2026).filter(([key])=>key.startsWith(prefix));
+}
+
 
 function monthHours(w){
   let h=0;
@@ -1216,6 +1259,18 @@ function openAlertsDetails(scope='all'){
   document.getElementById('expModal').classList.add('show');
 }
 
+
+function openHolidayDetails(){
+  const entries=monthHolidays(month);
+  document.getElementById('expTitle').textContent='Festivos Alicante · '+MES[month]+' 2026';
+  document.getElementById('expDesc').textContent=entries.length?'Festivos laborales e inhábiles marcados en el calendario del mes.':'No hay festivos de Alicante en este mes.';
+  document.getElementById('expArea').style.display='none';
+  document.getElementById('expActions').innerHTML=entries.length
+    ? `<div class="alert-detail-list">${entries.map(([key,name])=>`<div class="alert-detail holiday"><strong>Festivo</strong><span>${name}</span><em>Fecha: ${key}</em></div>`).join('')}</div><button class="btn" onclick="closeExp()">Cerrar</button>`
+    : '<div class="alert-empty">No hay festivos marcados para este mes.</div><button class="btn" onclick="closeExp()">Cerrar</button>';
+  document.getElementById('expModal').classList.add('show');
+}
+
 // ── LOCAL SNAPSHOTS / ROLLBACK (Fase 1) ──────────────────────────────────────
 function getSnapshots(){ try { return JSON.parse(localStorage.getItem(SNAP_KEY)||'[]'); } catch(e){ return []; } }
 function saveSnapshots(snaps){ try { localStorage.setItem(SNAP_KEY, JSON.stringify(snaps.slice(0,20))); } catch(e){} }
@@ -1247,11 +1302,13 @@ function render(){
   const thr=document.getElementById('tHead');
   let h=`<th class="th-name">Nombre y Apellidos</th>`;
   for(let d=1;d<=days;d++){
+    const key=dk(month,d);
     const wd=new Date(2026,month,d).getDay();
-    const we=isWE(month,d), tod=isToday(month,d);
-    const cls=we?'we':tod?'tod':'';
+    const we=isWE(month,d), tod=isToday(month,d), hol=isHolidayKey(key);
+    const cls=[we?'we':'',tod?'tod':'',hol?'hol':''].filter(Boolean).join(' ');
+    const title=hol?` title="${holidayNameKey(key)}"`:'';
     const numEl=tod?`<span class="today-num">${d}</span>`:`<span class="day-num">${d}</span>`;
-    h+=`<th class="th-day${cls?' '+cls:''}">${numEl}<span class="day-wd">${WD[wd]}</span></th>`;
+    h+=`<th class="th-day${cls?' '+cls:''}"${title}>${numEl}<span class="day-wd">${WD[wd]}</span>${hol?'<span class="holiday-mark">Festivo</span>':''}</th>`;
   }
   h+=`<th class="th-total">Total</th>`;
   h+=`<th class="th-vac th-vac-used" title="Días de vacaciones usados en el año">V Usados</th>`;
@@ -1281,10 +1338,12 @@ function render(){
       b+=`<tr class="${rowCls}" data-name="${w.name.toLowerCase()}" data-group="${g}" data-wi="${wi}">`;
       b+=`<td class="td-name" onclick="selectWorker(${wi})" title="Ver detalle de ${w.name}"><div class="worker-wrap">${badge}<span class="worker-name ${nameCls}">${w.name}</span></div></td>`;
       for(let d=1;d<=days;d++){
+        const key=dk(month,d);
         const s=sft(w,month,d);
-        const we=isWE(month,d), tod=isToday(month,d);
-        const tdCls=`td-shift${we?' we':''}${tod?' tod':''}`;
-        b+=`<td class="${tdCls}" data-wi="${wi}" data-dk="${dk(month,d)}" onclick="cellClick(event,${wi},'${dk(month,d)}')">`;
+        const we=isWE(month,d), tod=isToday(month,d), hol=isHolidayKey(key);
+        const tdCls=`td-shift${we?' we':''}${tod?' tod':''}${hol?' hol':''}`;
+        const title=hol?` title="Festivo Alicante: ${holidayNameKey(key)}"`:'';
+        b+=`<td class="${tdCls}" data-wi="${wi}" data-dk="${key}"${title} onclick="cellClick(event,${wi},'${key}')">`;
         if(s){
           const hl=shiftFilters.size>0&&!shiftFilters.has(s)?'':'';
           b+=`<span class="sb sb-${s}">${s}</span>`;
@@ -1318,7 +1377,11 @@ function renderStats(){
   ws.forEach(w=>{for(let d=1;d<=days;d++){const s=sft(w,month,d);if(s)cnt[s]++;}});
   const col={M:'#1D4ED8',T:'#92400E',N:'#5B21B6',R:'#0E7490',FM:'#15803D',FN:'#3730A3',GC:'#C2410C',V:'#065F46',O:'#6B7280'};
   const lbl={M:'Mañana',T:'Tarde',N:'Noche',R:'Refuerzo',FM:'Finde Día',FN:'Finde Noche',GC:'Guardia',V:'Vacaciones',O:'Oficina'};
-  document.getElementById('statsBar').innerHTML=Object.entries(cnt)
+  const holidayEntries=monthHolidays(month);
+  const holidayHtml=holidayEntries.length
+    ? `<button class="stat-pill holiday-stat" onclick="openHolidayDetails()" title="Ver festivos de Alicante del mes"><div class="stat-dot" style="background:var(--red)"></div><span class="stat-val">${holidayEntries.length}</span><span class="stat-lbl">Festivos Alicante</span></button>`
+    : '';
+  document.getElementById('statsBar').innerHTML=holidayHtml+Object.entries(cnt)
     .filter(([k,v])=>v>0)
     .map(([k,v])=>`<div class="stat-pill"><div class="stat-dot" style="background:${col[k]}"></div><span class="stat-val">${v}</span><span class="stat-lbl">${lbl[k]}</span></div>`)
     .join('');
@@ -1387,8 +1450,11 @@ function renderWorkerDetail(){
     if((s==='FM'||s==='FN'||s==='M'||s==='T'||s==='N'||s==='R'||s==='GC') && isWE(month,d)) weekends++;
     if(s==='GC') guards++;
     if(s==='V') vac++;
-    const cls=`mini-day${s?' has-shift':''}${isToday(month,d)?' today':''} ${s?('sb-'+s):''}`;
-    cells += `<div class="${cls}" title="${d} ${MES[month]} · ${s||'sin turno'}">${s||d}</div>`;
+    const key=dk(month,d);
+    const hol=isHolidayKey(key);
+    const cls=`mini-day${s?' has-shift':''}${isToday(month,d)?' today':''}${hol?' holiday':''} ${s?('sb-'+s):''}`;
+    const title=`${d} ${MES[month]} · ${s||'sin turno'}${hol?' · Festivo Alicante: '+holidayNameKey(key):''}`;
+    cells += `<div class="${cls}" title="${title}">${s||d}${hol?'<span class="mini-holiday-dot"></span>':''}</div>`;
   }
   const vTot=(window.VAC||{})[w.name]||0;
   const rem=vTot-vacUsed(w);
