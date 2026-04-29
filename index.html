@@ -1251,7 +1251,7 @@ async function encryptedLoad() {
     const ct = raw.slice(12);
     const dec = await crypto.subtle.decrypt({name:'AES-GCM',iv:nonce}, window._SESSION_KEY, ct);
     const parsed = JSON.parse(new TextDecoder().decode(dec));
-    parsed.forEach(d => { const w = W.find(x => x.name === d.name || (d.name === 'TBD' && /Nicol[aá]s Flabian/i.test(x.name)) || (/Nicol[aá]s Flabian/i.test(d.name) && x.name === 'TBD')); if (w) w.shifts = d.shifts; });
+    parsed.forEach(d => { const w = W.find(x => x.name === d.name || (d.name === 'TBD' && /TBD/i.test(x.name)) || (/TBD/i.test(d.name) && x.name === 'TBD')); if (w) w.shifts = d.shifts; });
   } catch(e) { console.warn('Load failed (old cache?):', e); localStorage.removeItem(SK); }
 }
 // Keep compatible sync wrappers for existing callers (fire-and-forget encrypted versions)
@@ -1331,7 +1331,7 @@ async function validateImportPayload(raw){
         if(!VALID.includes(shift)) errors.push(`${d.name}: turno inválido ${shift} en ${date}.`);
       });
     }
-    if(d && d.name && !known.has(d.name) && !(d.name==='TBD') && !/Nicol[aá]s Flabian/i.test(d.name)) warnings.push(`${d.name}: no existe en el planning actual; se ignorará.`);
+    if(d && d.name && !known.has(d.name) && !(d.name==='TBD') && !/TBD/i.test(d.name)) warnings.push(`${d.name}: no existe en el planning actual; se ignorará.`);
   });
   if(payload.meta && payload.meta.checksum){
     const checksum=await sha256Hex(canonicalStringify(data));
@@ -1341,7 +1341,7 @@ async function validateImportPayload(raw){
   }
   let changed=0, matched=0;
   data.forEach(d=>{
-    const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /Nicol[aá]s Flabian/i.test(x.name)) || (/Nicol[aá]s Flabian/i.test(d.name) && x.name==='TBD'));
+    const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /TBD/i.test(x.name)) || (/TBD/i.test(d.name) && x.name==='TBD'));
     if(!w) return;
     matched++;
     const dates=new Set([...Object.keys(w.shifts||{}), ...Object.keys(d.shifts||{})]);
@@ -1552,7 +1552,7 @@ function restoreSnapshot(id){
   const snap=getSnapshots().find(s=>String(s.id)===String(id));
   if(!snap) return alert('Snapshot no encontrado.');
   createSnapshot('Antes de restaurar snapshot');
-  snap.data.forEach(d=>{ const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /Nicol[aá]s Flabian/i.test(x.name)) || (/Nicol[aá]s Flabian/i.test(d.name) && x.name==='TBD')); if(w) w.shifts=d.shifts; });
+  snap.data.forEach(d=>{ const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /TBD/i.test(x.name)) || (/TBD/i.test(d.name) && x.name==='TBD')); if(w) w.shifts=d.shifts; });
   save(); closeExp(); render(); alert('Snapshot restaurado correctamente.');
 }
 function showSnapshots(){
@@ -2035,7 +2035,7 @@ function confirmImportJSON(){
     if(!Array.isArray(p)) throw new Error('No hay importación validada pendiente.');
     if(!confirm('Se guardará un snapshot y se sobrescribirá el planning actual. ¿Confirmas la importación?')) return;
     createSnapshot('Antes de importar JSON');
-    p.forEach(d=>{const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /Nicol[aá]s Flabian/i.test(x.name)) || (/Nicol[aá]s Flabian/i.test(d.name) && x.name==='TBD'));if(w)w.shifts=d.shifts;});
+    p.forEach(d=>{const w=W.find(x=>x.name===d.name || (d.name==='TBD' && /TBD/i.test(x.name)) || (/TBD/i.test(d.name) && x.name==='TBD'));if(w)w.shifts=d.shifts;});
     save(); closeExp(); render(); alert('Datos importados correctamente.');
   }catch(e){alert('Importación cancelada: '+e.message);}
 }
@@ -2108,7 +2108,7 @@ function applyExcelRotation2026(force=false) {
   if (!force && localStorage.getItem(EXCEL_ROTATION_STORAGE_KEY) === EXCEL_ROTATION_VERSION) return false;
 
   const existingByName = new Map(W.map(w => [normalizeWorkerNameForRotation(w.name), w]));
-  const nicolas = W.find(w => /Nicol[aá]s Flabian/i.test(w.name));
+  const nicolas = W.find(w => /TBD/i.test(w.name));
   if (nicolas && !existingByName.has('tbd')) existingByName.set('tbd', nicolas);
 
   const ordered = [];
@@ -2142,7 +2142,7 @@ async function bootApp() {
   await encryptedLoad();  // load encrypted localStorage overrides
 
   // Baja de última hora: mantener turnos, mostrar la plaza como TBD
-  const nicolas = W.find(w => /Nicol[aá]s Flabian/i.test(w.name));
+  const nicolas = W.find(w => /TBD/i.test(w.name));
   if (nicolas) {
     const oldName = nicolas.name;
     nicolas.name = 'TBD';
