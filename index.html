@@ -1130,6 +1130,9 @@ const MIN_REST_HOURS=12;
 const MAX_MONTH_HOURS=180;
 const MAX_CONCURRENT_VACATIONS_WARN=2;
 const MAX_CONCURRENT_VACATIONS_ERROR=4;
+// Vacation concurrency rules by role
+const MAX_OPERATORS_VACATION_SAME_DAY=2;
+const MAX_COORDINATORS_VACATION_SAME_DAY=1;
 const MAX_MONTH_NIGHTS=6;
 const MAX_MONTH_WEEKEND_SHIFTS=4;
 const SHIFT_WINDOWS={
@@ -1386,10 +1389,22 @@ function validatePlanning(){
     }
 
     const vacations=peopleByShift.V||[];
+    const opsVacations=[];
+    const coordVacations=[];
+    W.forEach(w=>{
+      if(w.shifts[key] !== 'V') return;
+      const g=grp(w);
+      if(g==='ops') opsVacations.push(w.name);
+      if(g==='coord') coordVacations.push(w.name);
+    });
+    if(opsVacations.length>MAX_OPERATORS_VACATION_SAME_DAY){
+      add('error',`${key}: hay ${opsVacations.length} operadores de vacaciones simultáneamente; máximo permitido ${MAX_OPERATORS_VACATION_SAME_DAY} (${opsVacations.join(', ')}).`,{date:key,shift:'V',category:'vacations'});
+    }
+    if(coordVacations.length>MAX_COORDINATORS_VACATION_SAME_DAY){
+      add('error',`${key}: hay ${coordVacations.length} coordinadores de vacaciones simultáneamente; máximo permitido ${MAX_COORDINATORS_VACATION_SAME_DAY} (${coordVacations.join(', ')}).`,{date:key,shift:'V',category:'vacations'});
+    }
     if(vacations.length>=MAX_CONCURRENT_VACATIONS_ERROR){
-      add('error',`${key}: ${vacations.length} personas de vacaciones simultáneamente (${vacations.join(', ')}).`,{date:key,shift:'V',category:'vacations'});
-    } else if(vacations.length>MAX_CONCURRENT_VACATIONS_WARN){
-      add('warn',`${key}: ${vacations.length} personas de vacaciones simultáneamente (${vacations.join(', ')}).`,{date:key,shift:'V',category:'vacations'});
+      add('warn',`${key}: ${vacations.length} personas de vacaciones simultáneamente en total (${vacations.join(', ')}).`,{date:key,shift:'V',category:'vacations'});
     }
   }
 
@@ -1399,15 +1414,14 @@ function validatePlanning(){
     const vTot=(window.VAC||{})[w.name]||0, vUsed=vacUsed(w);
     if(vTot && vUsed>vTot) add('error',`${w.name}: vacaciones excedidas (${vUsed}/${vTot}).`,{worker:w.name,shift:'V',category:'vacations'});
 
-    let consecutiveN=0, monthNights=0, weekendShifts=0;
+    let monthNights=0, weekendShifts=0;
     for(let d=1; d<=days; d++){
       const key=dk(month,d), s=sft(w,month,d);
       if(['N','FN'].includes(s)) monthNights++;
       if(isWE(month,d) && ['FM','FN'].includes(s)) weekendShifts++;
-      if(s==='N' || s==='FN') consecutiveN++; else { if(consecutiveN>3) add('warn',`${w.name}: ${consecutiveN} noches consecutivas hasta ${dk(month,d-1)}.`,{worker:w.name,date:dk(month,d-1),category:'rest'}); consecutiveN=0; }
-
     }
 
+    // Consecutive nights are allowed as long as the minimum legal rest between real shift windows is respected.
     const assignedWorkingShifts=Object.entries(w.shifts||{})
       .filter(([date,shift])=>/^2026-\d{2}-\d{2}$/.test(date) && VALID.includes(shift) && shift!=='V' && SHIFT_WINDOWS[shift])
       .map(([date,shift])=>({date,shift,...absoluteShiftWindow(date,shift)}))
@@ -1422,7 +1436,6 @@ function validatePlanning(){
         add('error',`${w.name}: descanso insuficiente (${rest}h) entre ${cur.date} ${cur.shift} (${SHIFT_LABELS[cur.shift]}) y ${nxt.date} ${nxt.shift} (${SHIFT_LABELS[nxt.shift]}).`,{worker:w.name,date:cur.date,shift:cur.shift,nextDate:nxt.date,nextShift:nxt.shift,category:'rest'});
       }
     }
-    if(consecutiveN>3) add('warn',`${w.name}: ${consecutiveN} noches consecutivas al cierre de ${MES[month]}.`,{worker:w.name,category:'rest'});
     if(monthNights>MAX_MONTH_NIGHTS) add('warn',`${w.name}: ${monthNights} noches en ${MES[month]} (umbral ${MAX_MONTH_NIGHTS}).`,{worker:w.name,category:'fairness'});
     if(weekendShifts>MAX_MONTH_WEEKEND_SHIFTS) add('warn',`${w.name}: ${weekendShifts} turnos de fin de semana en ${MES[month]} (umbral ${MAX_MONTH_WEEKEND_SHIFTS}).`,{worker:w.name,category:'fairness'});
   });
