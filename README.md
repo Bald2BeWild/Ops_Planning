@@ -1,9 +1,8 @@
-# OPS 24x7 Planning
+# OPS 24x7 - Rotación 2026 Clara
 
-Aplicación web estática para visualizar y editar el planning OPS 24x7.
+Versión con la rotación importada desde la pestaña `2026` del Excel `Planificacion_Turnos_Ops_2026_Clara.xlsx`.
 
-## Versión
-Verisure Light v4: diseño claro con filtros integrados en la barra lateral izquierda.
-
-## Uso
-Abre `index.html` en el navegador. Los cambios locales se guardan cifrados en `localStorage` tras iniciar sesión.
+Notas:
+- La rotación se aplica automáticamente una vez por navegador usando la clave local `ops24x7_excel_rotation_version`.
+- Los turnos manuales posteriores se conservan en localStorage cifrado.
+- Para forzar una recarga de la rotación, borra esa clave de localStorage o cambia `EXCEL_ROTATION_VERSION` en el HTML.
