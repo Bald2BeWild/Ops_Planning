@@ -691,6 +691,54 @@ body.dark-mode .td-shift.we{background:var(--we-bg)!important;}body.dark-mode .t
 body.dark-mode .alert-card,body.dark-mode .alert-row{background:#4A3038!important;border-color:#6D3C48!important;color:var(--text2)!important;}body.dark-mode .alert-card.warn,body.dark-mode .alert-row.warn{background:#51452F!important;border-color:#7B6334!important;}body.dark-mode .alert-card.error,body.dark-mode .alert-row.error{background:#55303A!important;border-color:#854657!important;}body.dark-mode .alert-tag,body.dark-mode .status-pill{background:var(--card2)!important;border-color:var(--border)!important;color:var(--text2)!important;}
 body.dark-mode .modal-overlay{background:rgba(13,17,23,.58)!important;}body.dark-mode .pk-key{background:var(--card2)!important;border-color:var(--border)!important;color:var(--text)!important;}body.dark-mode .holiday-legend,body.dark-mode .holiday-chip{background:#5A4326!important;color:#FFE2A7!important;border-color:#806237!important;}
 
+
+/* ══════════════════════════════════════════════
+   FIX — cobertura fin de semana + modo oscuro pulido
+══════════════════════════════════════════════ */
+.th-day.problem-day-error{box-shadow:inset 0 -3px 0 #ED002F;background:#FFF1F4!important;}
+.th-day.problem-day-warn{box-shadow:inset 0 -3px 0 #F59E0B;background:#FFFBEB!important;}
+.th-day.problem-day-error .day-num,.th-day.problem-day-warn .day-num{color:#111827!important;}
+body.dark-mode{
+  --bg:#303640; --bg2:#38404A; --card:#3E4652; --card2:#46505D;
+  --border:#5C6674; --border2:#717C8C; --text:#F5F7FA; --text2:#DCE3EC; --muted:#B3BECC;
+  --we-bg:#354455; --we-hd:#40526A; --today-bg:#574B33; --today-hd:#705A32;
+  --hover-row:#48515E; --tl-bg:#513843; --tl-bd:#7B4656; --coord-bg:#463E58; --coord-bd:#685687;
+}
+body.dark-mode .app-shell{background:transparent!important;}
+body.dark-mode .command-main{background:transparent!important;}
+body.dark-mode .app-sidebar,body.dark-mode .topbar,body.dark-mode .filterbar{background:rgba(62,70,82,.96)!important;border-color:var(--border)!important;backdrop-filter:blur(12px);}
+body.dark-mode .hero-card,body.dark-mode .kpi-card,body.dark-mode .alerts-panel,body.dark-mode .table-card,body.dark-mode .legend-card,body.dark-mode .detail-panel,body.dark-mode .changelog,body.dark-mode .editor-toolbar,body.dark-mode .ops-mini-panel,body.dark-mode .side-filter-panel{background:var(--card)!important;border-color:var(--border)!important;color:var(--text)!important;box-shadow:0 14px 30px rgba(15,23,42,.24)!important;}
+body.dark-mode .table-scroll{background:var(--card)!important;}
+body.dark-mode table{background:var(--card)!important;color:var(--text)!important;}
+body.dark-mode thead th{background:#444E5C!important;color:var(--muted)!important;border-color:var(--border)!important;}
+body.dark-mode .th-name,body.dark-mode .td-name,body.dark-mode .th-total,body.dark-mode .td-total,body.dark-mode .th-vac,body.dark-mode .td-vac{background:#3B4350!important;color:var(--text)!important;border-color:var(--border)!important;}
+body.dark-mode .td-shift{background:#3E4652!important;border-color:#515C6B!important;}
+body.dark-mode .td-shift.we{background:#38485A!important;}
+body.dark-mode .td-shift.tod{background:#5A4C31!important;}
+body.dark-mode .td-shift.hol{background:#54483A!important;}
+body.dark-mode tbody tr{border-color:#515C6B!important;}
+body.dark-mode tbody tr:not(.section-row):not(.section-tl):not(.section-coord):hover,
+body.dark-mode tbody tr:not(.section-row):not(.section-tl):not(.section-coord):hover .td-name{background:#4A5360!important;}
+body.dark-mode .section-row td{background:#48515F!important;color:#D0D8E3!important;border-color:var(--border)!important;}
+body.dark-mode .section-tl td{background:#5A3944!important;color:#FFB3C0!important;border-color:#7B4656!important;}
+body.dark-mode .section-coord td{background:#4F4563!important;color:#D4C2FF!important;border-color:#685687!important;}
+body.dark-mode .worker-name,body.dark-mode .worker-op,body.dark-mode .hero-title,body.dark-mode .brand-title,body.dark-mode .topbar-title,body.dark-mode .kpi-value,body.dark-mode .alerts-title{color:var(--text)!important;}
+body.dark-mode .hero-copy,body.dark-mode .brand-sub,body.dark-mode .topbar-sub,body.dark-mode .kpi-sub,body.dark-mode .li,body.dark-mode .legend-title,body.dark-mode .filter-label{color:var(--muted)!important;}
+body.dark-mode .search-box,body.dark-mode .side-search-box,body.dark-mode .month-nav,body.dark-mode .btn,body.dark-mode .chip,body.dark-mode input,body.dark-mode textarea#expArea,body.dark-mode .top-icon-btn{background:var(--card2)!important;border-color:var(--border)!important;color:var(--text)!important;}
+body.dark-mode .btn.btn-red,body.dark-mode .chip.active{background:#ED002F!important;border-color:#ED002F!important;color:#fff!important;}
+body.dark-mode .sb{box-shadow:0 1px 0 rgba(255,255,255,.05) inset;}
+body.dark-mode .problem-cell-error{outline:2px solid rgba(255,92,114,.85)!important;box-shadow:inset 0 0 0 999px rgba(255,92,114,.10)!important;}
+body.dark-mode .problem-cell-warn{outline:2px solid rgba(246,184,75,.85)!important;box-shadow:inset 0 0 0 999px rgba(246,184,75,.10)!important;}
+body.dark-mode .th-day.problem-day-error{background:#5A3640!important;box-shadow:inset 0 -3px 0 #FF5C72!important;}
+body.dark-mode .th-day.problem-day-warn{background:#584B33!important;box-shadow:inset 0 -3px 0 #F6B84B!important;}
+body.dark-mode .problem-row-error .td-name{background:#553540!important;border-left:3px solid #FF5C72!important;}
+body.dark-mode .problem-row-warn .td-name{background:#554A34!important;border-left:3px solid #F6B84B!important;}
+body.dark-mode .modal,body.dark-mode .exp-modal,body.dark-mode .picker{background:#3E4652!important;border-color:var(--border)!important;color:var(--text)!important;}
+body.dark-mode .alert-detail,body.dark-mode .problem-day{background:#46505D!important;border-color:var(--border)!important;color:var(--text)!important;}
+body.dark-mode .alert-detail span,body.dark-mode .problem-day-head{color:var(--text)!important;}
+body.dark-mode .alert-detail em,body.dark-mode .problem-day ul{color:var(--muted)!important;}
+body.dark-mode .alert-empty{background:#2F4A3D!important;border-color:#3A6B52!important;color:#BDF7CF!important;}
+
 </style>
 </head>
 <body class="light">
@@ -1077,7 +1125,7 @@ const WD=['do','lu','ma','mi','ju','vi','sá'];
 const HOURS={M:9,T:9,N:9,R:9,FM:12,FN:12,GC:8,V:0,O:8};
 const SK='verisure_ops24x7_2026_v8';
 const SNAP_KEY=SK+'_snapshots_v1';
-const COVERAGE_RULES={weekday:{M:1,T:1,N:1},weekend:{FM:1,FN:1}};
+const COVERAGE_RULES={weekday:{M:1,T:1,N:1},weekend:{FM:2,FN:2}};
 const MIN_REST_HOURS=12;
 const MAX_MONTH_HOURS=180;
 const MAX_CONCURRENT_VACATIONS_WARN=2;
@@ -1088,6 +1136,15 @@ const SHIFT_WINDOWS={
   M:{start:7,end:16}, T:{start:15,end:24}, N:{start:23,end:32}, R:{start:9.5,end:18.5},
   FM:{start:8,end:20}, FN:{start:20,end:32}, O:{start:9,end:18}, GC:{start:9,end:18}, V:null
 };
+const SHIFT_LABELS={M:'Mañana',T:'Tarde',N:'Noche',R:'Refuerzo',FM:'Finde Día',FN:'Finde Noche',GC:'Guardia Coordinación',V:'Vacaciones',O:'Oficina'};
+const _BASE_DATE_2026=new Date('2026-01-01T00:00:00');
+function dayOrdinal2026(key){return Math.round((new Date(key+'T00:00:00')-_BASE_DATE_2026)/86400000);}
+function absoluteShiftWindow(key,shift){
+  const win=SHIFT_WINDOWS[shift];
+  if(!win) return null;
+  const base=dayOrdinal2026(key)*24;
+  return {start:base+win.start,end:base+win.end};
+}
 const HOLIDAYS_2026={
   '2026-01-01':'Año Nuevo',
   '2026-01-06':'Epifanía del Señor / Reyes',
@@ -1311,9 +1368,13 @@ function validatePlanning(){
     });
 
     if(isWE(month,d)){
-      if((byRole.ops.FM||0)<1) add('error',`${key}: falta operador en fin de semana día (FM).`,{date:key,shift:'FM',category:'coverage'});
-      if((byRole.ops.FN||0)<1) add('error',`${key}: falta operador en fin de semana noche (FN).`,{date:key,shift:'FN',category:'coverage'});
-      if((byRole.coord.GC||0)<1) add('error',`${key}: falta guardia de coordinación de fin de semana (GC).`,{date:key,shift:'GC',category:'coverage'});
+      const reqFM=COVERAGE_RULES.weekend.FM;
+      const reqFN=COVERAGE_RULES.weekend.FN;
+      if((byRole.ops.FM||0)<reqFM) add('error',`${key}: cobertura insuficiente de fin de semana día: ${byRole.ops.FM||0}/${reqFM} operadores en FM.`,{date:key,shift:'FM',category:'coverage'});
+      if((byRole.ops.FN||0)<reqFN) add('error',`${key}: cobertura insuficiente de fin de semana noche: ${byRole.ops.FN||0}/${reqFN} operadores en FN.`,{date:key,shift:'FN',category:'coverage'});
+      if((byRole.ops.FM||0)>reqFM) add('warn',`${key}: hay ${byRole.ops.FM} operadores en FM; objetivo ${reqFM}.`,{date:key,shift:'FM',category:'coverage'});
+      if((byRole.ops.FN||0)>reqFN) add('warn',`${key}: hay ${byRole.ops.FN} operadores en FN; objetivo ${reqFN}.`,{date:key,shift:'FN',category:'coverage'});
+      if((byRole.coord.GC||0)<1) add('warn',`${key}: no hay guardia de coordinación (GC) asignada en fin de semana.`,{date:key,shift:'GC',category:'coverage'});
       if((byRole.coord.GC||0)>1) add('warn',`${key}: hay ${byRole.coord.GC} guardias de coordinación el mismo día.`,{date:key,shift:'GC',category:'coverage'});
     } else {
       ['M','T','N'].forEach(shift=>{
@@ -1345,14 +1406,20 @@ function validatePlanning(){
       if(isWE(month,d) && ['FM','FN'].includes(s)) weekendShifts++;
       if(s==='N' || s==='FN') consecutiveN++; else { if(consecutiveN>3) add('warn',`${w.name}: ${consecutiveN} noches consecutivas hasta ${dk(month,d-1)}.`,{worker:w.name,date:dk(month,d-1),category:'rest'}); consecutiveN=0; }
 
-      const nextKey=nextDateKey(key);
-      const nextShift=w.shifts[nextKey]||'';
-      const currentWin=SHIFT_WINDOWS[s], nextWin=SHIFT_WINDOWS[nextShift];
-      if(currentWin && nextWin){
-        const rest=(24+nextWin.start)-currentWin.end;
-        if(rest<MIN_REST_HOURS){
-          add('error',`${w.name}: descanso insuficiente (${rest}h) entre ${key} ${s} y ${nextKey} ${nextShift}.`,{worker:w.name,date:key,shift:s,nextDate:nextKey,nextShift,category:'rest'});
-        }
+    }
+
+    const assignedWorkingShifts=Object.entries(w.shifts||{})
+      .filter(([date,shift])=>/^2026-\d{2}-\d{2}$/.test(date) && VALID.includes(shift) && shift!=='V' && SHIFT_WINDOWS[shift])
+      .map(([date,shift])=>({date,shift,...absoluteShiftWindow(date,shift)}))
+      .filter(x=>Number.isFinite(x.start)&&Number.isFinite(x.end))
+      .sort((a,b)=>a.start-b.start);
+    for(let i=0;i<assignedWorkingShifts.length-1;i++){
+      const cur=assignedWorkingShifts[i], nxt=assignedWorkingShifts[i+1];
+      const rest=Math.round((nxt.start-cur.end)*10)/10;
+      const curInMonth=cur.date.startsWith(`2026-${p2(month+1)}-`);
+      const nextInMonth=nxt.date.startsWith(`2026-${p2(month+1)}-`);
+      if((curInMonth||nextInMonth) && rest<MIN_REST_HOURS){
+        add('error',`${w.name}: descanso insuficiente (${rest}h) entre ${cur.date} ${cur.shift} (${SHIFT_LABELS[cur.shift]}) y ${nxt.date} ${nxt.shift} (${SHIFT_LABELS[nxt.shift]}).`,{worker:w.name,date:cur.date,shift:cur.shift,nextDate:nxt.date,nextShift:nxt.shift,category:'rest'});
       }
     }
     if(consecutiveN>3) add('warn',`${w.name}: ${consecutiveN} noches consecutivas al cierre de ${MES[month]}.`,{worker:w.name,category:'rest'});
@@ -1363,13 +1430,23 @@ function validatePlanning(){
   return alerts.sort((a,b)=>(order[a.level]||9)-(order[b.level]||9));
 }
 function buildProblemIndex(){
-  const cell={}, row={};
+  const cell={}, row={}, day={};
   validatePlanning().forEach(a=>{
     const lvl=a.level==='error'?'error':'warn';
-    if(a.date){ cell[a.date]=cell[a.date]==='error'?'error':lvl; }
+    if(a.date){ day[a.date]=day[a.date]==='error'?'error':lvl; }
     if(a.worker){ row[a.worker]=row[a.worker]==='error'?'error':lvl; }
+    // Only paint specific cells when the alert belongs to a specific worker.
+    // Coverage gaps are shown in the day header / alert panel, not on every empty cell.
+    if(a.worker && a.date){
+      const k=`${a.worker}|${a.date}`;
+      cell[k]=cell[k]==='error'?'error':lvl;
+    }
+    if(a.worker && a.nextDate){
+      const k=`${a.worker}|${a.nextDate}`;
+      cell[k]=cell[k]==='error'?'error':lvl;
+    }
   });
-  return {cell,row};
+  return {cell,row,day};
 }
 function getProblemDays(){
   const grouped={};
@@ -1456,8 +1533,10 @@ function render(){
     const key=dk(month,d);
     const wd=new Date(2026,month,d).getDay();
     const we=isWE(month,d), tod=isToday(month,d), hol=isHolidayKey(key);
-    const cls=[we?'we':'',tod?'tod':'',hol?'hol':''].filter(Boolean).join(' ');
-    const title=hol?` title="${holidayNameKey(key)}"`:'';
+    const dayProblem=problemIndex.day[key];
+    const cls=[we?'we':'',tod?'tod':'',hol?'hol':'',dayProblem==='error'?'problem-day-error':dayProblem==='warn'?'problem-day-warn':''].filter(Boolean).join(' ');
+    const titleParts=[]; if(hol) titleParts.push(holidayNameKey(key)); if(dayProblem) titleParts.push(`Día con alerta ${dayProblem}`);
+    const title=titleParts.length?` title="${titleParts.join(' · ')}"`:'';
     const numEl=tod?`<span class="today-num">${d}</span>`:`<span class="day-num">${d}</span>`;
     h+=`<th class="th-day${cls?' '+cls:''}"${title}>${numEl}<span class="day-wd">${WD[wd]}</span>${hol?'<span class="holiday-mark">Festivo</span>':''}</th>`;
   }
@@ -1493,9 +1572,9 @@ function render(){
         const key=dk(month,d);
         const s=sft(w,month,d);
         const we=isWE(month,d), tod=isToday(month,d), hol=isHolidayKey(key);
-        const pLevel=problemIndex.cell[key];
+        const pLevel=problemIndex.cell[`${w.name}|${key}`];
         const tdCls=`td-shift${we?' we':''}${tod?' tod':''}${hol?' hol':''}${pLevel==='error'?' problem-cell-error':pLevel==='warn'?' problem-cell-warn':''}`;
-        const titleParts=[]; if(hol) titleParts.push(`Festivo Alicante: ${holidayNameKey(key)}`); if(pLevel) titleParts.push(`Día con alerta ${pLevel}`);
+        const titleParts=[]; if(hol) titleParts.push(`Festivo Alicante: ${holidayNameKey(key)}`); if(pLevel) titleParts.push(`Celda con alerta ${pLevel}`);
         const title=titleParts.length?` title="${titleParts.join(' · ')}"`:'';
         b+=`<td class="${tdCls}" data-wi="${wi}" data-dk="${key}"${title} onclick="cellClick(event,${wi},'${key}')">`;
         if(s){
