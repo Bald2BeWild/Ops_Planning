@@ -1146,7 +1146,12 @@ async function unlockApp() {
 function vacUsed(w){return Object.values(w.shifts).filter(v=>v==='V').length;}
 function vacRemaining(w){const e=(window.VAC||{})[w.name]||0;return e-vacUsed(w);}
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-const EDITORS={'1973':'Bruno Verdú (TL)','2201':'Mathias Moroni','3308':'Marcell Koós','4412':'Tomas de Sousa'};
+const EDITORS={
+  '6435c43d789e5a87ef8c3539bc99c51206774619d854e4df99ab7ffdf031f71a':'Bruno Verdú (TL)',
+  'd360ee25f38a92f8bdf9ed71171fb278cf887cf7a0bc07aee3b7336edff8c50e':'Mathias Moroni',
+  '923ed016258ed63868da56bd26c04fdfdfc554a9d7dcb46a9a3b63b2a59e0a02':'Marcell Koós',
+  'e93faee3d31d99fb3ba8d7c2a74c35b6f3c19b48cde0c7ec8b88494c2dbcd8e2':'Tomas de Sousa'
+};
 const VALID=['M','T','N','R','FM','FN','GC','V','O'];
 const MES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const WD=['do','lu','ma','mi','ju','vi','sá'];
@@ -1352,6 +1357,14 @@ async function validateImportPayload(raw){
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>'"]/g, match => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[match]));
+}
+
 const p2=n=>n.toString().padStart(2,'0');
 const dk=(m,d)=>`2026-${p2(m+1)}-${p2(d)}`;
 const dim=m=>new Date(2026,m+1,0).getDate();
@@ -1508,7 +1521,7 @@ function renderAlerts(){
   summary.textContent=alerts.length?`${errors} críticas · ${warns} avisos`:'Sin alertas detectadas';
   if(!alerts.length){ panel.classList.add('show'); list.innerHTML='<div class="alert-empty">✓ No se han detectado problemas básicos de cobertura, descanso o vacaciones.</div>'; return; }
   panel.classList.toggle('show',!alertsHiddenByUser);
-  list.innerHTML=alerts.slice(0,80).map(a=>`<div class="alert-item ${a.level}"><span class="alert-tag">${a.level}</span><span>${a.msg}</span></div>`).join('') + (alerts.length>80?`<div class="alert-item info"><span class="alert-tag">info</span><span>Hay ${alerts.length-80} alertas adicionales no mostradas.</span></div>`:'');
+  list.innerHTML=alerts.slice(0,80).map(a=>`<div class="alert-item ${a.level}"><span class="alert-tag">${a.level}</span><span>${escapeHTML(a.msg)}</span></div>`).join(\'\') + (alerts.length>80?`<div class="alert-item info"><span class="alert-tag">info</span><span>Hay ${alerts.length-80} alertas adicionales no mostradas.</span></div>`:'');
 }
 function toggleAlertsPanel(){ alertsHiddenByUser=!alertsHiddenByUser; document.getElementById('alertsPanel')?.classList.toggle('show',!alertsHiddenByUser); }
 
@@ -1610,7 +1623,7 @@ function render(){
       const rowCls=(isTL?'tl-row ':'')+(rowProblem==='error'?'problem-row-error':rowProblem==='warn'?'problem-row-warn':'');
       const hrs=monthHours(w);
       b+=`<tr class="${rowCls}" data-name="${w.name.toLowerCase()}" data-group="${g}" data-wi="${wi}">`;
-      b+=`<td class="td-name" onclick="selectWorker(${wi})" title="Ver detalle de ${w.name}"><div class="worker-wrap">${badge}<span class="worker-name ${nameCls}">${w.name}</span></div></td>`;
+      b+=`<td class="td-name" onclick="selectWorker(${wi})" title="Ver detalle de ${escapeHTML(w.name)}"><div class="worker-wrap">${badge}<span class="worker-name ${nameCls}">${escapeHTML(w.name)}</span></div></td>`;
       for(let d=1;d<=days;d++){
         const key=dk(month,d);
         const s=sft(w,month,d);
@@ -1951,9 +1964,10 @@ function pk(k){
   if(pin.length===4)setTimeout(chk,150);
 }
 function upd(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('on',i<pin.length);}
-function chk(){
-  if(EDITORS[pin]){
-    editor=EDITORS[pin];
+async function chk(){
+  const hash = await sha256Hex(pin);
+  if(EDITORS[hash]){
+    editor=EDITORS[hash];
     document.getElementById('pinModal').classList.remove('show');
     editMode=true;
     document.body.classList.add('edit-mode');
@@ -1965,6 +1979,10 @@ function chk(){
     updateWatermarkLabel();
     pin=''; upd();
   } else {
+    document.getElementById('pinErr').textContent='PIN incorrecto. Inténtalo de nuevo.';
+    pin=''; upd();
+  }
+} else {
     document.getElementById('pinErr').textContent='PIN incorrecto. Inténtalo de nuevo.';
     pin=''; upd();
   }
@@ -2318,15 +2336,7 @@ async function showWatermark(pwd) {
       trigger('Se ha detectado un intento de abrir herramientas de desarrollador. Sesión cerrada por seguridad.');
     }
   }, true);
-  setInterval(()=>{
-    if(!isSessionUnlocked()) return;
-    const threshold=180;
-    const widthDiff=Math.abs(window.outerWidth-window.innerWidth);
-    const heightDiff=Math.abs(window.outerHeight-window.innerHeight);
-    if(widthDiff>threshold || heightDiff>threshold){
-      trigger('Se ha detectado apertura de herramientas de desarrollador. Sesión cerrada por seguridad.');
-    }
-  }, 1200);
+
   document.addEventListener('contextmenu', e=>{
     if(isSessionUnlocked()){
       e.preventDefault();
