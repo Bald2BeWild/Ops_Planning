@@ -2793,6 +2793,45 @@ function applyExcelRotation2026(force=false) {
   return true;
 }
 
+function setWorkerShiftByName(workerName, key, shift){
+  const canonicalName=canonicalWorkerName(workerName);
+  const worker=W.find(w=>normalizeWorkerNameForRotation(w.name)===normalizeWorkerNameForRotation(canonicalName));
+  if(!worker) return false;
+  const current=worker.shifts?.[key] || '';
+  const next=shift || '';
+  if(current===next) return false;
+  if(!worker.shifts) worker.shifts={};
+  if(next) worker.shifts[key]=next;
+  else delete worker.shifts[key];
+  return true;
+}
+
+function applyMay2026ManualCorrections(){
+  let changed=false;
+  const rWeek1=['2026-05-04','2026-05-05','2026-05-06','2026-05-07','2026-05-08'];
+  const rWeeks123=[
+    '2026-05-04','2026-05-05','2026-05-06','2026-05-07','2026-05-08',
+    '2026-05-11','2026-05-12','2026-05-13','2026-05-14','2026-05-15',
+    '2026-05-18','2026-05-19','2026-05-20','2026-05-21','2026-05-22'
+  ];
+  const noWeekend=['2026-05-09','2026-05-10','2026-05-16','2026-05-17','2026-05-23','2026-05-24'];
+
+  rWeeks123.forEach(key=>{
+    if(setWorkerShiftByName('Andreea Ionescu',key,'R')) changed=true;
+    if(setWorkerShiftByName('TBD',key,'R')) changed=true;
+  });
+  noWeekend.forEach(key=>{
+    if(setWorkerShiftByName('Andreea Ionescu',key,'')) changed=true;
+    if(setWorkerShiftByName('TBD',key,'')) changed=true;
+  });
+  rWeek1.forEach(key=>{
+    if(setWorkerShiftByName('Iván Cano del Molino',key,'R')) changed=true;
+    if(setWorkerShiftByName('Younes Jarir Ezzahraoui',key,'R')) changed=true;
+  });
+  if(setWorkerShiftByName('Bruno Verdú Belmar','2026-05-12','V')) changed=true;
+  return changed;
+}
+
 // ── BOOT APP (direct access) ────────────────────────────────────────────────
 async function bootApp() {
   W = JSON.parse(JSON.stringify(EXCEL_ROTATION_2026 || []));
@@ -2807,8 +2846,9 @@ async function bootApp() {
 
   const hasSavedPlanning=!!localStorage.getItem(SK);
   const appliedExcelRotation = hasSavedPlanning ? false : applyExcelRotation2026(false);
+  const appliedManualCorrections = applyMay2026ManualCorrections();
   touchPlanningData();
-  if (appliedExcelRotation || purgedRetiredOperator || normalizedLegacyAliases) save(true);
+  if (appliedExcelRotation || purgedRetiredOperator || normalizedLegacyAliases || appliedManualCorrections) save(true);
 
   document.body.classList.add('light');
   render();
@@ -2823,6 +2863,12 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 window.addEventListener('beforeunload', () => {
   if(_saveTimer) flushSaveNow();
+});
+window.addEventListener('pagehide', () => {
+  if(_saveTimer) flushSaveNow();
+});
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState==='hidden' && _saveTimer) flushSaveNow();
 });
 
 
