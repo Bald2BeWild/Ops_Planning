@@ -2852,6 +2852,18 @@ function applyMay2026ManualCorrections(){
     if(setWorkerShiftByName('Younes Jarir Ezzahraoui',key,'R')) changed=true;
   });
   if(setWorkerShiftByName('Bruno Verdú Belmar','2026-05-12','V')) changed=true;
+  // ── Correcciones semana 18-22 mayo ──────────────────────────────────────
+  const week1822=['2026-05-18','2026-05-19','2026-05-20','2026-05-21','2026-05-22'];
+  // Andreea Ionescu: O toda la semana (sobreescribe la R puesta por rWeeks123)
+  week1822.forEach(key=>{ if(setWorkerShiftByName('Andreea Ionescu',key,'O')) changed=true; });
+  // TBD: M toda la semana (sobreescribe la R puesta por rWeeks123)
+  week1822.forEach(key=>{ if(setWorkerShiftByName('TBD',key,'M')) changed=true; });
+  // David Aibar: 18-22 = T
+  week1822.forEach(key=>{ if(setWorkerShiftByName('David Aibar',key,'T')) changed=true; });
+  // Teo Valentín Marpegan: 18-22 = T (EXCEL tenía 18=M, 19-22 vacío)
+  week1822.forEach(key=>{ if(setWorkerShiftByName('Teo Valentin Marpegan',key,'T')) changed=true; });
+  // Alejandro Nicolás Gomez: 18-22 = M (EXCEL tenía 18=T, 19-22 vacío)
+  week1822.forEach(key=>{ if(setWorkerShiftByName('Alejandro Nicolas Gomez',key,'M')) changed=true; });
   return changed;
 }
 
